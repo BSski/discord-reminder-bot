@@ -24,6 +24,8 @@ A brief description of what this project does and who it's for
 
 ## Demo
 
+Wanna try breaking it?:
+<discord inv>
 Insert gif or link to demo
 
 
