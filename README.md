@@ -1,4 +1,4 @@
-<div markdown="1">    
+<div markdown="1" align="center">    
 #Lorem
 **ipsum** dolor sit amet, consectetur adipiscing elit, sed 
 </div>
