@@ -1,3 +1,8 @@
+<div markdown="1">    
+#Lorem
+**ipsum** dolor sit amet, consectetur adipiscing elit, sed 
+</div>
+
 <p align="center" markdown="1">
 ![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
 </p>
