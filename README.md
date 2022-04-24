@@ -4,22 +4,21 @@
 
 </div>
 
-<p align="center" markdown="1">
-
-</p>
-
 <p align="center">
   <h2 align="center">:hourglass::date: Discord Reminder Bot :date::hourglass:</h2>
 </p>
 
 <p align="center">
-A brief description of what this project does and who it's for
+  A brief description of what this project does and who it's for
 </p>
 
-
-<h3 align="center">:fireworks: Demo :fireworks:</h3>
-<p align="center">Wanna test it or try breaking it? Join the test server:</p><br>
-<p align="center">https://discord.gg/8GWc9xNjX8</p>
+<h3 align="center">
+  :fireworks: Demo :fireworks:
+</h3>
+<p align="center">
+  Wanna test it or try breaking it? Join the test server:<br>
+  https://discord.gg/8GWc9xNjX8
+</p>
 
 
 ## 🛠️ Deployment
