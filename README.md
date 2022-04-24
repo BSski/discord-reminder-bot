@@ -113,6 +113,10 @@ Besides commands behaviour, the bot also:
 <screens>
 
 
+## Support
+<contact.bsski@gmail.com>
+
+
 ## 🧑🏻 Authors
 
 - [@BSski](https://www.github.com/BSski)
