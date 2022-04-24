@@ -70,13 +70,21 @@ To run this project, you will need to add the following environment variables.
 `LOCAL_TIMEZONE=US/Eastern`
 
 
-## Features
+## Commands
 - Reminders on a certain point in the future
 - Reminders after some time interval from the present
 - List view of 10 upcoming reminders of everyone
 - List view of 10 upcoming reminders of yours
 - Seeing the details of a reminder
 - Deleting a reminder
+
+
+## Features
+Besides commands behaviour, the bot also:
+- validates user's profile (puts the user on a cooldown if needed)
+- validates message content
+- validates date and time of a reminder
+- 
 
 
 ## Support
