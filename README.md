@@ -9,7 +9,10 @@
 </p>
 
 <p align="center">
-  Have you ever wanted to get mentioned on Discord at a certain time? Or to mention someone else (possibly an entire group)?
+  Have you ever wanted to get mentioned on Discord on a certain time?<br>
+  Maybe you even wanted to see a small note from your past self in there?<br>
+  That's what this code was written for!<br>
+  Made it for my small discord server, but feel free to use it if you want to.
 </p>
 
 <h3 align="center">
