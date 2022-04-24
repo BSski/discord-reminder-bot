@@ -100,7 +100,7 @@ Besides commands behaviour, the bot also:
 
 
 ## :sos: Support
-<contact.bsski@gmail.com>
+- <contact.bsski@gmail.com>
 
 
 ## 🧑🏻 Authors
