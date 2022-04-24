@@ -44,7 +44,9 @@ To self-host this project for free:
 7. Create replit environment variables described below and fill them with your values.
 8. Run the code on replit and copy the link of the created website.
 9. Create a new monitor on https://uptimerobot.com/ on the link of aforementioned website.
-10. Done! The bot is ready to use. Contact me if you have any questions.
+10. Done! The bot is ready to use.
+
+Contact me if you have any questions.
 
 
 ## :closed_lock_with_key: Environment Variables
