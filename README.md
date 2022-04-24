@@ -37,7 +37,7 @@ https://discord.gg/8GWc9xNjX8
 To self-host this project:
 1. Create a new application on https://discord.com/developers/applications.
 2. Create a new bot in the application.
-3. Add the bot to a server and get the bot's token and the server's target bot channel's id.
+3. Add the bot to a server and get the bot's token and the server's target bot channel's ID.
 4. Create a free cluster on https://www.mongodb.com/ and get its log in link and password.
 5. Create a database and three collections inside it. First one is for future reminders, second one is for past reminders, third one is for user profiles.
 6. Create a project on https://replit.com and connect it with your fork of this repository (or manually copy the code there).
