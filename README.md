@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  # :date: Discord Reminder Bot :date:
+  #:date: Discord Reminder Bot :date:
 </p>
 
 <p align="center">
