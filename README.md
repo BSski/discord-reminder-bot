@@ -16,12 +16,14 @@
 A brief description of what this project does and who it's for
 </p>
 
+<p align="center">
 
 ## :fireworks: Demo
 
 Wanna test it or try breaking it? Join the test server: <br>
 https://discord.gg/8GWc9xNjX8
 
+</p>
 
 ## 🛠️ Deployment
 
