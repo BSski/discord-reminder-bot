@@ -1,6 +1,6 @@
 <div markdown="1" align="center">    
 
-![App Screenshot](https://i.imgur.com/fBUXKRB.png)
+![App Screenshot](https://i.imgur.com/8b8l1O0.png)
 
 </div>
 
