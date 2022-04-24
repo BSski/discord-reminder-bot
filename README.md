@@ -28,7 +28,7 @@ A brief description of what this project does and who it's for
 
 ## :fireworks: Demo
 
-Wanna try breaking it?:
+Wanna try breaking it? Join the test server:
 
 https://discord.gg/8GWc9xNjX8
 
