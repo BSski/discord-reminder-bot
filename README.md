@@ -18,7 +18,7 @@ A brief description of what this project does and who it's for
 
 <p align="center">
 
-## :fireworks: Demo
+<h3 align="center"> :fireworks: Demo</h3>
 
 Wanna test it or try breaking it? Join the test server: <br>
 https://discord.gg/8GWc9xNjX8
