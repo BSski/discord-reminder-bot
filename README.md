@@ -46,7 +46,7 @@ To self-host this project for free:
 9. Create a new monitor on https://uptimerobot.com/ on the link of aforementioned website.
 10. Done! The bot is ready to use.
 
-Feel free to contact me if you have any questions :smiley:
+Feel free to contact me if you have any questions :slightly_smiling_face:
 
 
 ## :closed_lock_with_key: Environment Variables
