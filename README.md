@@ -35,7 +35,7 @@ https://discord.gg/8GWc9xNjX8
 
 ## 🛠️ Deployment
 
-To self-host this project:
+To self-host this project for free:
 1. Create a new application on https://discord.com/developers/applications.
 2. Create a new bot in the application.
 3. Add the bot to a server and get the bot's token and the server's target bot channel's ID.
