@@ -47,10 +47,6 @@ To self-host this project for free:
 9. Create a new monitor on https://uptimerobot.com/ on the link of aforementioned website.
 10. Done! The bot is ready to use. Contact me if you have any questions.
 
-```bash
-  npm run deploy
-```
-
 
 ## :closed_lock_with_key: Environment Variables
 
@@ -76,11 +72,30 @@ To run this project, you will need to add the following environment variables.
 
 
 ## ❗ Commands
+
+```
+!remind me of X on 05.07.22 12:00
+```
 - Reminders on a certain point in the future
+```
+!remind me of X in 15 mins
+```
 - Reminders after some time interval from the present
+```
+!list_reminders
+```
 - List view of 10 upcoming reminders of everyone
+```
+!my_reminders
+```
 - List view of 10 upcoming reminders of yours
+```
+!show_reminder <ID>
+```
 - Seeing the details of a reminder
+```
+!delete_reminder <ID>
+```
 - Deleting a reminder
 
 
