@@ -51,13 +51,21 @@ To self-host this project:
 
 To run this project, you will need to add the following environment variables.
 `DATABASE_NAME=MONGO_BOT_DATABASE_NAME`
+
 `PAST_REMINDERS_COLLECTION_NAME=PAST_REMINDERS`
+
 `FUTURE_REMINDERS_COLLECTION_NAME=FUTURE_REMINDERS`
+
 `REMINDERBOT_USERS_PROFILES_COLLECTION_NAME=USERS_PROFILES`
+
 `MONGODB_LINK=mongodb+srv://myusername:{}@myusername.bl5bla.mongodb.net/test`
+
 `PW=TESTPW`
+
 `TOKEN=as21d4f1vSWZXSzvErY12314LoNG4SW22adfdffa45afds512TokEn1sdaf2304fd`
+
 `CHANNEL_ID=65735462653125342`
+
 `LOCAL_TIMEZONE=US/Eastern`
 
 
