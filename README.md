@@ -92,7 +92,7 @@ To run this project, you will need to add the following environment variables (t
 - Deletes a reminder
 
 
-## 🚀 Features
+## 🚀 Additional features
 Besides commands behaviour, the bot also:
 - validates user's profile (puts the user on a cooldown if needed),
 - validates message content,
