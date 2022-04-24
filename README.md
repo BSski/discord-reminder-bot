@@ -40,7 +40,7 @@ To self-host this project:
 7. Create replit environment variables described in .env_sample_file and fill them with your values.
 8. Run the code on replit and copy the link of the created website.
 9. Create a new monitor on https://uptimerobot.com/ on the link of aforementioned website.
-10. Done! The bot is ready to use.
+10. Done! The bot is ready to use. Contact me if you have any questions.
 
 ```bash
   npm run deploy
@@ -49,43 +49,38 @@ To self-host this project:
 
 ## Environment Variables
 
-To run this project, you will need to add the following environment variables to your .env file
-
-`API_KEY`
-
-`ANOTHER_API_KEY`
+To run this project, you will need to add the following environment variables.
+`DATABASE_NAME=MONGO_BOT_DATABASE_NAME`
+`PAST_REMINDERS_COLLECTION_NAME=PAST_REMINDERS`
+`FUTURE_REMINDERS_COLLECTION_NAME=FUTURE_REMINDERS`
+`REMINDERBOT_USERS_PROFILES_COLLECTION_NAME=USERS_PROFILES`
+`MONGODB_LINK=mongodb+srv://myusername:{}@myusername.bl5bla.mongodb.net/test`
+`PW=TESTPW`
+`TOKEN=as21d4f1vSWZXSzvErY12314LoNG4SW22adfdffa45afds512TokEn1sdaf2304fd`
+`CHANNEL_ID=65735462653125342`
+`LOCAL_TIMEZONE=US/Eastern`
 
 
 ## Features
-
-- Light/dark mode toggle
-- Live previews
-- Fullscreen mode
-- Cross platform
-
-
-## Lessons Learned
-
-What did you learn while building this project? What challenges did you face and how did you overcome them?
+- Reminders on a certain point in the future
+- Reminders after some time interval from the present
+- List view of 10 upcoming reminders of everyone
+- List view of 10 upcoming reminders of yours
+- Seeing the details of a reminder
+- Deleting a reminder
 
 
 ## Support
 
-For support, email fake@fake.com or join our Slack channel.
+For support, email fake@fake.com.
 
 
 ## Usage/Examples
 
-```javascript
-import Component from 'my-project'
-
-function App() {
-  return <Component />
-}
-```
+<screens>
 
 
 ## Authors
 
-- [@katherinepeterson](https://www.github.com/octokatherine)
+- [@BSski](https://www.github.com/BSski)
 
