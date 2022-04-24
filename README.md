@@ -34,7 +34,7 @@ To self-host this project for free:
 6. Create a project on https://replit.com and connect it with your fork of this repository (or manually copy the code there).
 7. Create replit environment variables described below and fill them with your values.
 8. Run the code on replit and copy the link of the created website.
-9. Create a new monitor on https://uptimerobot.com/ on the link of aforementioned website. Insert your website link and keep the rest at default values.
+9. Create a new monitor on https://uptimerobot.com/ on the link of aforementioned website. Keep the other parameters at default values.
 
 🎇 Done! The bot is ready to use. 🎇
 
