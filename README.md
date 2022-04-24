@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  A brief description of what this project does and who it's for
+  Have you ever wanted to get mentioned on Discord at a certain time? Or to mention someone else (possibly an entire group)?
 </p>
 
 <h3 align="center">
