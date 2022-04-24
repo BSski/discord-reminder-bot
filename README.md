@@ -43,7 +43,7 @@ Feel free to contact me if you have any questions :slightly_smiling_face:
 
 ## :closed_lock_with_key: Environment Variables
 
-To run this project, you will need to add the following environment variables (the values below are exemplary).
+To run this project, you have to set the following environment variables (the values below are exemplary).
 
 `DATABASE_NAME=MONGO_BOT_DATABASE_NAME`
 
