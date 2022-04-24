@@ -99,7 +99,7 @@ Besides commands behaviour, the bot also:
 - validates date and time of a reminder.
 
 
-## Support
+## :sos: Support
 <contact.bsski@gmail.com>
 
 
