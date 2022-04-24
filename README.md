@@ -93,7 +93,7 @@ To run this project, you will need to add the following environment variables (t
 
 
 ## 🚀 Additional features
-Besides commands behaviour, the bot also:
+Besides the commands behaviour, the bot also:
 - validates user's profile (puts the user on a cooldown if needed),
 - validates message content,
 - validates date and time of a reminder.
