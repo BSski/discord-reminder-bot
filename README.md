@@ -26,13 +26,13 @@ A brief description of what this project does and who it's for
 </p>
 
 
-## Demo
+## :fireworks: Demo
 
 Wanna try breaking it?:
 https://discord.gg/8GWc9xNjX8
 
 
-## Deployment
+## 🛠️ Deployment
 
 To self-host this project:
 1. Create a new application on https://discord.com/developers/applications.
@@ -51,7 +51,7 @@ To self-host this project:
 ```
 
 
-## Environment Variables
+## :closed_lock_with_key: Environment Variables
 
 To run this project, you will need to add the following environment variables.
 
@@ -74,7 +74,7 @@ To run this project, you will need to add the following environment variables.
 `LOCAL_TIMEZONE=US/Eastern`
 
 
-## Commands
+## ❗ Commands
 - Reminders on a certain point in the future
 - Reminders after some time interval from the present
 - List view of 10 upcoming reminders of everyone
@@ -83,7 +83,7 @@ To run this project, you will need to add the following environment variables.
 - Deleting a reminder
 
 
-## Features
+## 🚀 Features
 Besides commands behaviour, the bot also:
 - validates user's profile (puts the user on a cooldown if needed)
 - validates message content
@@ -91,17 +91,12 @@ Besides commands behaviour, the bot also:
 - 
 
 
-## Support
-
-For support, email fake@fake.com.
-
-
 ## Usage/Examples
 
 <screens>
 
 
-## Authors
+## 🧑🏻 Authors
 
 - [@BSski](https://www.github.com/BSski)
 
