@@ -50,6 +50,7 @@ To self-host this project:
 ## Environment Variables
 
 To run this project, you will need to add the following environment variables.
+
 `DATABASE_NAME=MONGO_BOT_DATABASE_NAME`
 
 `PAST_REMINDERS_COLLECTION_NAME=PAST_REMINDERS`
