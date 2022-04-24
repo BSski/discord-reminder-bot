@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <h2 align="center">:hourglass: Discord Reminder Bot :date:</h2>
+  <h2 align="center">:hourglass::date: Discord Reminder Bot :date::hourglass:</h2>
 </p>
 
 <p align="center">
