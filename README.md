@@ -12,7 +12,7 @@
   Have you ever wanted to get mentioned on Discord on a certain time?<br>
   Maybe you even wanted to see a small note from your past self in there?<br>
   That's what this code was written for!<br>
-  Made it for my small discord server, but feel free to use it if you want to.
+  Made it for my small discord server as a fun way to learn MongoDB.
 </p>
 
 <h3 align="center">
