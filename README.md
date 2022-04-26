@@ -1,6 +1,6 @@
 <div markdown="1" align="center">    
 
-![Demo Screenshot](https://i.imgur.com/xAkRLUj.png)
+![Demo Screenshot](https://i.imgur.com/V5tnvlI.png)
 
 </div>
 
@@ -27,7 +27,7 @@
 ## :camera: Screenshots
 <div markdown="1" align="center">    
 
-![Commands Screenshot](https://i.imgur.com/WDBm8r6.png)
+![Commands Screenshot](https://i.imgur.com/HSasIdd.png)
 
 </div>
 
