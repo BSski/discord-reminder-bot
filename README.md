@@ -1,6 +1,6 @@
 <div markdown="1" align="center">    
 
-![App Screenshot](https://i.imgur.com/xAkRLUj.png)
+![Demo Screenshot](https://i.imgur.com/xAkRLUj.png)
 
 </div>
 
@@ -22,6 +22,14 @@
   Wanna test it or try breaking it? Join the test server:<br>
   https://discord.gg/8GWc9xNjX8
 </p>
+
+
+## :camera: Screenshots
+<div markdown="1" align="center">    
+
+![Commands Screenshot](https://i.imgur.com/WDBm8r6.png)
+
+</div>
 
 
 ## 🛠️ Deployment
