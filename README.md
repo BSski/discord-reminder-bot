@@ -123,7 +123,7 @@ Besides the commands behaviour, the bot also:
 - <contact.bsski@gmail.com>
 
 
-## 🧑🏻 Authors
+## :construction_worker: Author
 
 - [@BSski](https://www.github.com/BSski)
 
