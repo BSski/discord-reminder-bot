@@ -109,6 +109,16 @@ Besides the commands behaviour, the bot also:
 - validates date and time of a reminder.
 
 
+## :arrow_up: Possible future directions
+- Automated live tests (dedicated bot for testing this one),
+- generating a jpg of incoming week with your reminders on it,
+- interval reminders,
+- parsing different formats of dates (dateutil.parser),
+- reminding flashcards using Leitner system,
+- command for deleting all reminders of yours,
+- tagging other users in advance.
+
+
 ## :sos: Support
 - <contact.bsski@gmail.com>
 
