@@ -111,11 +111,11 @@ Besides the commands behaviour, the bot also:
 
 ## :arrow_up: Possible future directions
 - Automated live tests (dedicated bot for testing this one),
-- generating a jpg of incoming week with your reminders on it,
+- generating a jpg of the incoming week with your reminders on it,
 - interval reminders,
 - parsing different formats of dates (dateutil.parser),
-- reminding flashcards using Leitner system,
-- command for deleting all reminders of yours,
+- reminding flashcards using the Leitner system,
+- command for deleting all your reminders,
 - tagging other users in advance.
 
 
