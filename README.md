@@ -116,7 +116,7 @@ Besides the commands behaviour, the bot also:
 - parsing different formats of dates (dateutil.parser),
 - reminding flashcards using the Leitner system,
 - command for deleting all your reminders,
-- tagging other users in advance.
+- mentioning other users in advance.
 
 
 ## :sos: Support
