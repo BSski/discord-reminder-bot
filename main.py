@@ -19,8 +19,7 @@ bot.load_extension("base.base")
 async def on_ready() -> None:
     """
     Discord.py docs:
-    "Called when the client is done preparing the data received from Discord.
-    Usually after login is successful and the Client.guilds and co. are filled up."
+    "Called when the client is done preparing the data received from Discord. Usually after login is successful and the Client.guilds and co. are filled up."
     """
     print("Bot is online.")
     bot.loop.create_task(check_reminders(bot))
