@@ -12,6 +12,11 @@
 
 [![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://github.com/BSski/discord-reminder-bot/blob/main/LICENSE)
   
+  
+<a href="https://discord.gg/8GWc9xNjX8" title="Join Test Server">
+<img src="https://img.shields.io/discord/737854816402800690?color=%236d82cb&label=Join%20Community&logo=discord&logoColor=%23FFFFFF&style=flat-square" alt="Join The Test Server of ReminderBot"/>
+</a>
+
 </div>
 
 <p align="center">
