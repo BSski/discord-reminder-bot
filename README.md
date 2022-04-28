@@ -11,10 +11,7 @@
 <div markdown="1" align="center">
 
 [![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://github.com/BSski/discord-reminder-bot/blob/main/LICENSE)
-  
-  
-<a href="https://discord.gg/8GWc9xNjX8" title="Join Test Server">
-<img src="https://img.shields.io/discord/737854816402800690?color=%236d82cb&label=Join%20Community&logo=discord&logoColor=%23FFFFFF&style=flat-square" alt="Join The Test Server of ReminderBot"/>
+
 </a>
 
 </div>
@@ -53,7 +50,7 @@ To self-host this project for free:
 3. Add the bot to a server and get the bot's token and the server's target bot channel's ID.
 4. Create a free cluster on https://www.mongodb.com/ and get its log in link and password. Customize the link to the format given below.
 5. Create a database and three collections inside it. First one is for future reminders, second one is for past reminders, third one is for user profiles.
-6. Create a project on https://replit.com and connect it with your fork of this repository (or manually copy the code there).
+6. Create a project on https://replit.com and connect it with your fork of this repository (or manually copy the files there).
 7. Create replit environment variables described below and fill them with your values.
 8. Run the code on replit and copy the link of the created website.
 9. Create a new monitor on https://uptimerobot.com/ on the link of your aforementioned website. Keep the other parameters at default values.
