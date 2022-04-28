@@ -8,6 +8,12 @@
   <h2 align="center">:hourglass::date: Simple Discord Reminder Bot :date::hourglass:</h2>
 </p>
 
+<div markdown="1" align="center">
+
+[![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://github.com/BSski/discord-reminder-bot/blob/main/LICENSE)
+  
+</div>
+
 <p align="center">
   Have you ever wanted to get mentioned on Discord on a certain time?<br>
   Maybe you even wanted to see a small note from your past self in there?<br>
@@ -16,11 +22,6 @@
   All the code was written by me.
 </p>
 
-<div markdown="1" align="center">
-
-[![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://github.com/BSski/discord-reminder-bot/blob/main/LICENSE)
-  
-</div>
 
 <h3 align="center">
   :fireworks: Demo :fireworks:
