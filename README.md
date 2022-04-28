@@ -11,7 +11,7 @@
 <div markdown="1" align="center">
 
 [![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://github.com/BSski/discord-reminder-bot/blob/main/LICENSE)
-[![Demo Uptime](https://img.shields.io/uptimerobot/ratio/m791506013-6a0d048e5d48a3500b5e722e)
+[![Demo Uptime](https://img.shields.io/uptimerobot/ratio/m791506013-6a0d048e5d48a3500b5e722e)](https://discord.gg/8GWc9xNjX8)
 
 </div>
 
