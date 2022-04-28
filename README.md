@@ -12,8 +12,6 @@
 
 [![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://github.com/BSski/discord-reminder-bot/blob/main/LICENSE)
 
-</a>
-
 </div>
 
 <p align="center">
