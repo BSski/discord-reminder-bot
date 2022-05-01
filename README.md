@@ -124,6 +124,7 @@ Besides the commands behaviour, the bot also:
 - parsing different formats of dates (dateutil.parser),
 - reminding flashcards using the Leitner system,
 - command for deleting all your reminders,
+- add cooldown on all commands, not only on creating reminders,
 - mentioning other users in advance.
 
 
