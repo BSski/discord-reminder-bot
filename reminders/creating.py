@@ -317,7 +317,7 @@ def create_reminder_to_insert(
     Constructs a dictionary containing all information about a reminder.
     """
     reminder_name_short = (
-        reminder_name[-50:] + " [...]" if len(reminder_name) > 50 else reminder_name
+        reminder_name[:50] + " [...]" if len(reminder_name) > 50 else reminder_name
     )
     current_datetime = dt.datetime.now(const.LOCAL_TIMEZONE)
     hash_id = const.hashids.encode(convert_to_miliseconds(current_datetime))
