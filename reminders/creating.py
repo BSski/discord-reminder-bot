@@ -125,19 +125,21 @@ def extract_info_from_msg(
                 extraction_status,
             ) = extract_info_from_msg_timedelta(ctx, msg_parts)
 
-    elif "on" in msg_parts and "in" not in msg_parts:
+    elif "on" in msg_parts:
         (
             reminder_name,
             reminder_date,
             extraction_status,
         ) = extract_info_from_msg_datetime(ctx, msg_parts)
 
-    elif "on" not in msg_parts and "in" in msg_parts:
+    elif "in" in msg_parts:
         (
             reminder_name,
             reminder_date,
             extraction_status,
         ) = extract_info_from_msg_timedelta(ctx, msg_parts)
+    else:
+        extraction_status = "You have to use \"on\" or \"in\" in the message!"
 
     if extraction_status != "Success":
         return None, None, extraction_status
@@ -304,8 +306,7 @@ def get_timezone_aware_datetime_with_timedelta(
         minutes=+sum(timedelta_units.get(x, 0) for x in accepted_time_units["minutes"]),
         seconds=+sum(timedelta_units.get(x, 0) for x in accepted_time_units["seconds"]),
     )
-    if relative_delta.years > 20:
-        relative_delta.years = 20
+    relative_delta.years = min(relative_delta.years, 20)
     reminder_date = dt.datetime.now(const.LOCAL_TIMEZONE) + relative_delta
     return reminder_date
 
@@ -317,7 +318,7 @@ def create_reminder_to_insert(
     Constructs a dictionary containing all information about a reminder.
     """
     reminder_name_short = (
-        reminder_name[:50] + " [...]" if len(reminder_name) > 50 else reminder_name
+        f"{reminder_name[:50]} [...]" if len(reminder_name) > 50 else reminder_name
     )
     current_datetime = dt.datetime.now(const.LOCAL_TIMEZONE)
     hash_id = const.hashids.encode(convert_to_miliseconds(current_datetime))

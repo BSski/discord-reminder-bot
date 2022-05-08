@@ -67,7 +67,7 @@ def validate_reminder_friendly_id(
     if len(supposed_friendly_reminder_id.split()) != 1:
         return "Give me a single ID!"
 
-    if len(str(supposed_friendly_reminder_id)) > 35:
+    if len(supposed_friendly_reminder_id) > 35:
         return "Wow, that's a long ID! Too long for sure!"
     return "Success"
 

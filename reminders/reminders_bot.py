@@ -168,9 +168,10 @@ async def my_reminders(ctx: Context) -> None:
         return
 
     embed = discord.Embed(
-        title=":date: Upcoming reminders by {}:".format(ctx.author.nick or ctx.author.name),
-        color=0x0000FF,
+        title=f":date: Upcoming reminders by {ctx.author.nick or ctx.author.name}:",
+        color=0x0000FF
     )
+
     for reminder in reminder_date_sorted_user_specific_reminders:
         remind_in = str(
             utc_to_local(reminder["reminder_date"])

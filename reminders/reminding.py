@@ -21,7 +21,7 @@ async def remind_user(bot: bot.Bot, user_id: bson.int64.Int64, reminder: dict) -
         title=":exclamation: Reminder", description=reminder_description, color=0xFFA500
     )
     channel = bot.get_channel(int(const.CHANNEL_ID))
-    author_tagging_msg = '<@{}>'.format(user_id)
+    author_tagging_msg = f'<@{user_id}>'
     await channel.send(author_tagging_msg, embed=embed)
 
 
