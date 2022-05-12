@@ -13,9 +13,7 @@ import global_const
 )
 @commands.is_owner()
 async def shutdown(ctx: Context) -> None:
-    """
-    Shuts down the bot.
-    """
+    """Shuts down the bot."""
     await display_notification(ctx, "Goodbye.")
     exit()
 
@@ -25,20 +23,16 @@ async def shutdown(ctx: Context) -> None:
     description="Says the current date and time.",
 )
 async def say_datetime(ctx: Context) -> None:
-    """
-    Says the current date and time.
-    """
+    """Says the current date and time."""
     datetime_msg = dt.datetime.now(global_const.LOCAL_TIMEZONE).strftime(
         "%d.%m.%Y %H:%M:%S"
     )
     await display_notification(ctx, datetime_msg)
 
 
-@commands.command(aliases=global_const.COMMANDS_ALIASES["help"])
-async def help(ctx: Context) -> None:
-    """
-    Displays information about the bot and its commands.
-    """
+@commands.command(aliases=global_const.COMMANDS_ALIASES["display_help"])
+async def display_help(ctx: Context) -> None:
+    """Displays information about the bot and its commands."""
     embed = discord.Embed(
         title="Bot",
         description="Hi! I'm a bot. I can remind you of stuff! You can mention me or use '!' prefix.\nCommands list:",
@@ -65,4 +59,4 @@ async def help(ctx: Context) -> None:
 def setup(bot):
     bot.add_command(shutdown)
     bot.add_command(say_datetime)
-    bot.add_command(help)
+    bot.add_command(display_help)
