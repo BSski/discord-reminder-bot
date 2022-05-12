@@ -75,7 +75,7 @@ To run this project, you have to set up the following environment variables (the
 
 `PW=TESTPW`
 
-`TOKEN=as21d4f1vSWZXSzvErY12314LoNG4SW22adfdffa45afds512TokEn1sdaf2304fd`
+`TOKEN=this_is_a_test_token_as21d4f1vSWZXSzvErY12314LoNG4S12TokEn1sdaf2304fd`
 
 `CHANNEL_ID=65735462653125342`
 
