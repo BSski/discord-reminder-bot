@@ -33,7 +33,8 @@ COMMANDS_ALIASES = {
         "timedate",
         "say_timedate",
     ),
-    "help": (
+    "display_help": (
+        "help",
         "hlep",
         "hepl",
         "elhp",

@@ -1,5 +1,5 @@
 """
-Allows Uptime Robot to periodically connect to bot's replit host, which keeps
+Allows Uptime Robot to periodically connect to the bot's replit host, which keeps
 the repository awake continuously.
 """
 from threading import Thread
