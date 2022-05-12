@@ -8,7 +8,7 @@ from discord.ext.commands import Context
 import reminders.const as const
 from reminders.user_profile import update_or_create_user_profile
 from reminders.utils import (
-    convert_to_miliseconds,
+    convert_to_milliseconds,
     display_notification,
     utc_to_local,
 )
@@ -288,7 +288,7 @@ def get_timezone_aware_datetime_with_timedelta(
     Adds timedelta (relativedelta) to current datetime and returns timezone aware
     reminder's future datetime.
     """
-    timedelta_units = dict()
+    timedelta_units = {}
 
     previous_item = "0"
     for item in reminder_date_parts[::-1]:
@@ -321,7 +321,7 @@ def create_reminder_to_insert(
         f"{reminder_name[:50]} [...]" if len(reminder_name) > 50 else reminder_name
     )
     current_datetime = dt.datetime.now(const.LOCAL_TIMEZONE)
-    hash_id = const.hashids.encode(convert_to_miliseconds(current_datetime))
+    hash_id = const.hashids.encode(convert_to_milliseconds(current_datetime))
     data = {
         "friendly_id": hash_id,
         "author_id": ctx.author.id,
@@ -358,9 +358,7 @@ def insert_reminder_to_database(author_id: int, data: dict) -> str:
 async def confirm_creating_reminder(
     ctx: Context, reminder_date: dt.datetime, reminder_friendly_id: str
 ) -> None:
-    """
-    Sends a message confirming creating a new reminder.
-    """
+    """Sends a message confirming creating a new reminder."""
     notification_description = (
         "I will remind you of that on **{}**, <@{}>.\nReminder's ID: `{}`".format(
             reminder_date.strftime("%d.%m.%Y %H:%M:%S"),

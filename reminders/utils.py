@@ -28,9 +28,7 @@ async def display_error(ctx: Context, embed_description: str, text: str = None) 
 async def display_notification(
     ctx: Context, embed_description: str, text: str = None
 ) -> None:
-    """
-    Sends a notification.
-    """
+    """Sends a notification."""
     embed = discord.Embed(
         title="Notification", description=embed_description, color=0x0000FF
     )
@@ -40,9 +38,7 @@ async def display_notification(
 async def display_error_on_channel(
     channel: discord.channel.TextChannel, error_msg: str, text: str = None
 ) -> None:
-    """
-    Sends an error on the channel.
-    """
+    """Sends an error on the channel."""
     embed = discord.Embed(title="Error", description=error_msg, color=0xFF0000)
     await channel.send(text, embed=embed)
 
@@ -72,12 +68,10 @@ def validate_reminder_friendly_id(
     return "Success"
 
 
-def convert_to_miliseconds(current_datetime: dt.datetime) -> int:
-    """
-    Converts datetime object to miliseconds.
-    """
-    current_miliseconds = int(f"{current_datetime.microsecond:0<4}")
-    miliseconds_stamp = sum(
+def convert_to_milliseconds(current_datetime: dt.datetime) -> int:
+    """Converts datetime object to milliseconds."""
+    current_milliseconds = int(f"{current_datetime.microsecond:0<4}")
+    milliseconds_stamp = sum(
         [
             int(str(current_datetime.year)[-1:]) * 365 * 31 * 24 * 60 * 60 * 1000,
             current_datetime.month * 31 * 24 * 60 * 60 * 1000,
@@ -85,7 +79,7 @@ def convert_to_miliseconds(current_datetime: dt.datetime) -> int:
             current_datetime.hour * 60 * 60 * 1000,
             current_datetime.minute * 60 * 1000,
             current_datetime.second * 1000,
-            current_miliseconds,
+            current_milliseconds,
         ]
     )
-    return miliseconds_stamp
+    return milliseconds_stamp

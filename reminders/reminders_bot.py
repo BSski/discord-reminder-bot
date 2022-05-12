@@ -1,6 +1,5 @@
 import asyncio
 import datetime as dt
-from datetime import timezone
 
 import discord
 from discord.ext import commands
@@ -36,9 +35,7 @@ from reminders.utils import (
 
 @commands.command(aliases=const.COMMANDS_ALIASES["help_reminders"])
 async def help_reminders(ctx: Context) -> None:
-    """
-    Displays information about the reminder bot and its commands.
-    """
+    """Displays information about the reminder bot and its commands."""
     commands_names = {
         create_reminder: "A) !remind me of <reminder_name> on <DD.MM.YY> <HH:MM>\nB) !remind me of <reminder_name> in <number> <unit>",
         list_reminders: "!list_reminders",
@@ -62,9 +59,7 @@ async def help_reminders(ctx: Context) -> None:
     description="A) Adds a reminder on <date>.\nExample: !remind me of the end of the world on 31.12.99 23:59/\nB) Adds a reminder in X time units.\nYou can use years, months, days, hours, minutes and seconds.\nExample: !remind me of cake in the oven in 3 days",
 )
 async def create_reminder(ctx: Context, *, msg: str = None) -> None:
-    """
-    Adds a new reminder to the database.
-    """
+    """Adds a new reminder to the database."""
     user_profile_validation_status = validate_user_profile(ctx)
     if user_profile_validation_status != "Success":
         await display_error(ctx, user_profile_validation_status)
@@ -102,11 +97,10 @@ async def create_reminder(ctx: Context, *, msg: str = None) -> None:
     description="Use when you want to see everyone's reminders.",
 )
 async def list_reminders(ctx: Context) -> None:
-    """
-    Lists maximum of 10 upcoming reminders.
-    """
+    """Lists maximum of 10 upcoming reminders."""
     sorted_reminders = sorted(
-        const.FUTURE_REMINDERS.find(), key=lambda reminder: reminder["reminder_date"]
+        const.FUTURE_REMINDERS.find(),
+        key=lambda reminder_info: reminder_info["reminder_date"]
     )
     if not sorted_reminders:
         notification_description = (
@@ -120,7 +114,6 @@ async def list_reminders(ctx: Context) -> None:
         color=0x0000FF,
     )
     for reminder in sorted_reminders[-10:]:
-        author = await ctx.bot.fetch_user(reminder["author_id"])
         remind_in = str(
             utc_to_local(reminder["reminder_date"])
             - dt.datetime.now(const.LOCAL_TIMEZONE)
@@ -147,9 +140,7 @@ async def list_reminders(ctx: Context) -> None:
     description="Use when you want to see your reminders.",
 )
 async def my_reminders(ctx: Context) -> None:
-    """
-    Lists maximum of 10 upcoming reminders that belong to the caller.
-    """
+    """Lists maximum of 10 upcoming reminders that belong to the caller."""
     user_profile = const.REMINDERBOT_USERS_PROFILES.find_one({"_id": ctx.author.id})
     if not user_profile:
         notification_description = "You haven't made any reminders ever. Try making one!\nCommand format: !remind me of X in/on Y"
@@ -160,7 +151,7 @@ async def my_reminders(ctx: Context) -> None:
         const.FUTURE_REMINDERS.find(
             {"_id": {"$in": user_profile["user_future_reminders"]}}
         ).limit(10),
-        key=lambda reminder: reminder["reminder_date"],
+        key=lambda reminder_info: reminder_info["reminder_date"],
     )
     if not reminder_date_sorted_user_specific_reminders:
         notification_description = "You haven't made any reminders."
@@ -200,9 +191,7 @@ async def my_reminders(ctx: Context) -> None:
 async def show_reminder(
     ctx: Context, *, supposed_reminder_friendly_id: str = None
 ) -> None:
-    """
-    Shows one reminder basing on a passed ID.
-    """
+    """Shows one reminder basing on a passed ID."""
     if supposed_reminder_friendly_id is None:
         error_msg = (
             "You didn't use the correct command!\nCorrect format: !show_reminder <ID>"
@@ -255,9 +244,7 @@ async def show_reminder(
 async def delete_reminder(
     ctx: Context, *, supposed_reminder_friendly_id: str = None
 ) -> None:
-    """
-    Deletes one reminder basing on a passed ID.
-    """
+    """Deletes one reminder basing on a passed ID."""
     if supposed_reminder_friendly_id is None:
         error_msg = (
             "You didn't use the correct command!\nCorrect format: !delete_reminder <ID>"
@@ -302,9 +289,7 @@ async def delete_reminder(
 
 
 async def check_reminders(bot: bot.Bot) -> None:
-    """
-    Periodically checks whether there are any reminders for the current time.
-    """
+    """Periodically checks whether there are any reminders for the current time."""
     await bot.wait_until_ready()
     channel = bot.get_channel(int(const.CHANNEL_ID))
     while not bot.is_closed():
