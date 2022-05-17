@@ -5,7 +5,7 @@
 </div>
 
 <p align="center">
-  <h2 align="center">:hourglass::date: Simple Discord Reminder Bot :date::hourglass:</h2>
+  <h2 align="center">:hourglass: Simple Discord Reminder Bot :hourglass:</h2>
 </p>
 
 <div markdown="1" align="center">
