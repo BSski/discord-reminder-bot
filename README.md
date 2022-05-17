@@ -27,7 +27,7 @@
 
 
 <h3 align="center">
-  :fireworks: Demo :fireworks:
+  :fireworks: Live demo :fireworks:
 </h3>
 <p align="center">
   Wanna test it or try breaking it? Join the test server:<br>
