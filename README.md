@@ -30,13 +30,13 @@
 ## Table of contents
 * [Project description](#scroll-project-description)
 * [Screenshots](#camera-screenshots)
-* [Deployment](#🛠️-deployment)
-* [Environment Variables](#environment-variables)
-* [Commands](#commands)
-* [Additional features](#additional-features)
-* [Possible future directions](#possible-future-directions)
-* [Support](#support)
-* [Author](#author)
+* [Deployment](#hammer_and_wrench-deployment)
+* [Environment Variables](#closed_lock_with_key-environment-variables)
+* [Commands](#exclamation-commands)
+* [Additional features](#rocket-additional-features)
+* [Possible future directions](#arrow_up-possible-future-directions)
+* [Support](#sos-support)
+* [Author](#construction_worker-author)
 * [License](#unlock-license)
 
 
@@ -52,7 +52,7 @@ Have you ever wanted to get mentioned on Discord on a certain time? Maybe you ev
 </div>
 
 
-## 🛠️ Deployment
+## :hammer_and_wrench: Deployment
 
 To self-host this project for free:
 1. Create a new application on https://discord.com/developers/applications.
@@ -93,7 +93,7 @@ To run this project, you have to set up the following environment variables (**t
 `LOCAL_TIMEZONE=US/Eastern`
 
 
-## ❗ Commands
+## :exclamation: Commands
 
 ```
 !remind me of X on 05.07.22 12:00
@@ -121,7 +121,7 @@ To run this project, you have to set up the following environment variables (**t
 - Deletes a reminder
 
 
-## 🚀 Additional features
+## :rocket: Additional features
 Besides the commands behaviour, the bot also:
 - validates user's profile (puts the user on a cooldown if needed),
 - validates message content,
