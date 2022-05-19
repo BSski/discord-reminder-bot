@@ -5,7 +5,7 @@
 </div>
 
 <p align="center">
-  <h2 align="center">:hourglass: Simple Discord Reminder Bot :hourglass:</h2>
+  <h2 align="center">Discord Reminder Bot</h2>
 </p>
 
 <div markdown="1" align="center">
@@ -17,14 +17,6 @@
 
 </div>
 
-<p align="center">
-  Have you ever wanted to get mentioned on Discord on a certain time?<br>
-  Maybe you even wanted to see a small note from your past self in there?<br>
-  That's what this code was written for!<br>
-  Made it for my small discord server as a fun way to learn MongoDB.<br>
-  All the code was written by me.
-</p>
-
 
 <h3 align="center">
   :fireworks: Live demo :fireworks:
@@ -33,6 +25,23 @@
   Wanna test it or try breaking it? Join the test server:<br>
   https://discord.gg/8GWc9xNjX8
 </p>
+
+
+## Table of contents
+* [Project description](#scroll-project-description)
+* [Screenshots](#camera-screenshots)
+* [Deployment](#🛠️-deployment)
+* [Environment Variables](#environment-variables)
+* [Commands](#commands)
+* [Additional features](#additional-features)
+* [Possible future directions](#possible-future-directions)
+* [Support](#support)
+* [Author](#author)
+* [License](#unlock-license)
+
+
+## :scroll: Project description
+Have you ever wanted to get mentioned on Discord on a certain time? Maybe you even wanted to see a small note from your past self in there? That's what this code was written for! Made it for my small discord server as a fun way to learn MongoDB.
 
 
 ## :camera: Screenshots
@@ -137,4 +146,8 @@ Besides the commands behaviour, the bot also:
 ## :construction_worker: Author
 
 - [@BSski](https://www.github.com/BSski)
+
+
+## :unlock: License
+MIT
 
