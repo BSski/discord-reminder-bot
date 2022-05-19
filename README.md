@@ -34,7 +34,7 @@
 * [Environment variables](#closed_lock_with_key-environment-variables)
 * [Commands](#exclamation-commands)
 * [Additional features](#rocket-additional-features)
-* [Possible future directions](#arrow_up-possible-future-directions)
+* [Room for improvement](#arrow_up-room-for-improvement)
 * [Contact](#telephone_receiver-contact)
 * [Author](#construction_worker-author)
 * [License](#unlock-license)
@@ -128,7 +128,7 @@ Besides the commands behaviour, the bot also:
 - validates date and time of a reminder.
 
 
-## :arrow_up: Possible future directions
+## :arrow_up: Room for improvement
 - Automated live tests (dedicated bot for testing this one),
 - generating a jpg of the incoming week with your reminders on it,
 - interval reminders,
