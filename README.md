@@ -31,11 +31,11 @@
 * [Project description](#scroll-project-description)
 * [Screenshots](#camera-screenshots)
 * [Deployment](#hammer_and_wrench-deployment)
-* [Environment Variables](#closed_lock_with_key-environment-variables)
+* [Environment variables](#closed_lock_with_key-environment-variables)
 * [Commands](#exclamation-commands)
 * [Additional features](#rocket-additional-features)
 * [Possible future directions](#arrow_up-possible-future-directions)
-* [Support](#sos-support)
+* [Contact](#telephone_receiver-contact)
 * [Author](#construction_worker-author)
 * [License](#unlock-license)
 
@@ -70,7 +70,7 @@ To self-host this project for free:
 Feel free to contact me if you have any questions :slightly_smiling_face:
 
 
-## :closed_lock_with_key: Environment Variables
+## :closed_lock_with_key: Environment variables
 
 To run this project, you have to set up the following environment variables (**the values below are exemplary**).
 
@@ -139,12 +139,11 @@ Besides the commands behaviour, the bot also:
 - mentioning other users in advance.
 
 
-## :sos: Support
+## :telephone_receiver: Contact
 - <contact.bsski@gmail.com>
 
 
 ## :construction_worker: Author
-
 - [@BSski](https://www.github.com/BSski)
 
 
