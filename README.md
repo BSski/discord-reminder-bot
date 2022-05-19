@@ -41,8 +41,8 @@
 
 
 ## :scroll: Project description
-Have you ever wanted to get mentioned on Discord on a certain time? Maybe you even wanted to see a small note from your past self in there? That's what this code was written for! Made it for my small discord server as a fun way to learn MongoDB.
-
+Have you ever wanted to get mentioned on Discord at a certain time? Maybe you even wanted to see a small note from your past self in there? That's what this code was written for!
+(A small project made for my discord server as a fun way to learn MongoDB.)
 
 ## :camera: Screenshots
 <div markdown="1" align="center">    
