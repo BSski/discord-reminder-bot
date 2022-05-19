@@ -22,7 +22,7 @@
   :fireworks: Live demo :fireworks:
 </h3>
 <p align="center">
-  Wanna test it or try breaking it? Join the test server:<br>
+  Want to test it or try breaking it? Join the test server:<br>
   https://discord.gg/8GWc9xNjX8
 </p>
 
