@@ -131,6 +131,7 @@ Besides the commands behaviour, the bot also:
 
 ## :arrow_up: Room for improvement
 - Automated live tests (dedicated bot for testing this one),
+- some functions should be refactored into several new ones,
 - generating a jpg of the incoming week with your reminders on it,
 - interval reminders,
 - parsing different formats of dates (dateutil.parser),
