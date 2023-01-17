@@ -13,10 +13,9 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/bsski/discord-reminder-bot/badge)](https://www.codefactor.io/repository/github/bsski/discord-reminder-bot)
 [![Maintainability](https://api.codeclimate.com/v1/badges/7a76c753e9fca6c27087/maintainability)](https://codeclimate.com/github/BSski/discord-reminder-bot/maintainability)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-
+</div>
 
 <!-- [![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](./LICENSE) -->
-</div>
 
 
 <h3 align="center">
