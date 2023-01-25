@@ -19,14 +19,6 @@
 
 <!-- [![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](./LICENSE) -->
 
-<!--
-<h3 align="center">
-  :fireworks: Live demo :fireworks:
-</h3>
-<p align="center">
-  Want to test it or try breaking it? Join the test server:<br>
-</p>
--->
 
 ## Table of contents
 * [Project description](#scroll-project-description)
