@@ -1,3 +1,5 @@
+import os
+
 import discord
 from discord.ext import commands
 
@@ -6,7 +8,6 @@ import global_const
 from keep_alive import keep_alive
 from reminders.reminders_bot import check_reminders
 from reminders.utils import get_commands_prefix
-
 
 bot = commands.Bot(command_prefix=get_commands_prefix, case_insensitive=True)
 bot.remove_command("help")
@@ -37,4 +38,9 @@ async def on_message(message: discord.message.Message) -> None:
 
 
 keep_alive()
-bot.run(global_const.TOKEN)
+
+try:
+    bot.run(global_const.TOKEN)
+except:
+    print("\n\n\n\nThe bot has shut down due to an error.\n\n\n\n")
+    os.system("kill 1")
