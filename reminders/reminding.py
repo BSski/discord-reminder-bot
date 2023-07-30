@@ -8,21 +8,22 @@ import reminders.const as const
 from reminders.utils import utc_to_local
 
 
-async def remind_user(bot: bot.Bot, user_id: bson.int64.Int64,
-                      reminder: dict) -> None:
+async def remind_user(bot: bot.Bot, user_id: bson.int64.Int64, reminder: dict) -> None:
     """Sends a reminder on CHANNEL_ID channel."""
-    reminder_description = "```{}```\n`{}`  created on `{}`".format(
+    reminder_description = "```{}```\n`{}`  created on  `{}`".format(
         reminder["reminder_name_full"] or "- ",
         reminder["friendly_id"],
-        reminder["date_created"].strftime("%d.%m.%Y %H:%M:%S"),
+        utc_to_local(reminder["date_created"]).strftime("%d.%m.%Y %H:%M:%S"),
     )
-    embed = discord.Embed(title=":exclamation: {}".format(
-        utc_to_local(
-            reminder["reminder_date"]).strftime("%d.%m.%Y %H:%M:%S"), ),
-                          description=reminder_description,
-                          color=0xFFA500)
+    embed = discord.Embed(
+        title=":exclamation: {}".format(
+            utc_to_local(reminder["reminder_date"]).strftime("%d.%m.%Y %H:%M:%S"),
+        ),
+        description=reminder_description,
+        color=0xFFA500,
+    )
     channel = bot.get_channel(int(const.CHANNEL_ID))
-    author_tagging_msg = f'<@{user_id}>'
+    author_tagging_msg = f"<@{user_id}>"
     await channel.send(author_tagging_msg, embed=embed)
 
 
@@ -37,11 +38,11 @@ async def add_to_past_reminders(reminder: dict) -> str:
 
 
 async def delete_done_reminders(
-    reminders_to_delete: List[bson.objectid.ObjectId], ) -> str:
+    reminders_to_delete: List[bson.objectid.ObjectId],
+) -> str:
     """Deletes reminded reminders from FUTURE_REMINDERS collection."""
     for reminder_id in reminders_to_delete:
-        deletion_status = const.FUTURE_REMINDERS.delete_one(
-            {"_id": reminder_id})
+        deletion_status = const.FUTURE_REMINDERS.delete_one({"_id": reminder_id})
         if not deletion_status.deleted_count:
             return "Something went wrong when removing a reminder!"
     return "Success"

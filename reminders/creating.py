@@ -20,7 +20,8 @@ def validate_user_profile(ctx: Context) -> str:
     Returns "Success" if the validation succeeded. Returns error message otherwise.
     """
     user_reminders_info = const.REMINDERBOT_USERS_PROFILES.find_one(
-        {"_id": ctx.author.id})
+        {"_id": ctx.author.id}
+    )
 
     if not user_reminders_info:
         return "Can't get info about this user from the database."
@@ -46,7 +47,9 @@ def validate_user_profile(ctx: Context) -> str:
 
     user_future_reminders = user_reminders_info["user_future_reminders"]
     if len(user_future_reminders) > 999:
-        return "You've exceeded the limit! You can have maximum of 1000 active reminders."
+        return (
+            "You've exceeded the limit! You can have maximum of 1000 active reminders."
+        )
     return "Success"
 
 
@@ -62,16 +65,21 @@ def check_if_cooldown(
     """
     if len(user_all_reminders) >= max_active_reminders:
         x = const.PAST_REMINDERS.find_one(
-            {"_id": user_all_reminders[-max_active_reminders]})
+            {"_id": user_all_reminders[-max_active_reminders]}
+        )
         if not x:
             x = const.FUTURE_REMINDERS.find_one(
-                {"_id": user_all_reminders[-max_active_reminders]})
+                {"_id": user_all_reminders[-max_active_reminders]}
+            )
         if not x:
             return "Something went wrong, try again!"
-        if (utc_to_local(x["date_created"]) >
-                dt.datetime.now(const.LOCAL_TIMEZONE) - time_limit_object):
+        if (
+            utc_to_local(x["date_created"])
+            > dt.datetime.now(const.LOCAL_TIMEZONE) - time_limit_object
+        ):
             return "You've exceeded the limit! Maximum {} reminders created per {}!".format(
-                max_active_reminders, time_limit)
+                max_active_reminders, time_limit
+            )
     return "Success"
 
 
@@ -101,8 +109,7 @@ def validate_msg(msg: Optional[str]) -> str:
 
 
 def extract_info_from_msg(
-        ctx: Context, msg_parts: List[str]
-) -> Tuple[Optional[str], Optional[dt.datetime], str]:
+        msg_parts: List[str]) -> Tuple[Optional[str], Optional[dt.datetime], str]:
     """
     Extracts reminder name and reminder date from the command's message.
     """
@@ -114,96 +121,95 @@ def extract_info_from_msg(
                 reminder_name,
                 reminder_date,
                 extraction_status,
-            ) = extract_info_from_msg_datetime(ctx, msg_parts)
+            ) = extract_msg_info_datetime(msg_parts)
         else:
             (
                 reminder_name,
                 reminder_date,
                 extraction_status,
-            ) = extract_info_from_msg_timedelta(ctx, msg_parts)
+            ) = extract_msg_info_timedelta(msg_parts)
 
     elif "on" in msg_parts:
         (
             reminder_name,
             reminder_date,
             extraction_status,
-        ) = extract_info_from_msg_datetime(ctx, msg_parts)
+        ) = extract_msg_info_datetime(msg_parts)
 
     elif "in" in msg_parts:
         (
             reminder_name,
             reminder_date,
             extraction_status,
-        ) = extract_info_from_msg_timedelta(ctx, msg_parts)
+        ) = extract_msg_info_timedelta(msg_parts)
     else:
-        extraction_status = "You have to use \"on\" or \"in\" in the message!"
+        extraction_status = 'You have to use "on" or "in" in the message!'
 
     if extraction_status != "Success":
         return None, None, extraction_status
     return reminder_name, reminder_date, "Success"
 
 
-def extract_info_from_msg_datetime(
-        ctx: Context, msg_parts: List[str]
+def extract_msg_info_datetime(
+    msg_parts: List[str],
 ) -> Tuple[Optional[str], Optional[dt.datetime], str]:
     """
     Extracts reminder name and reminder date from the message. Runs a validation check.
     "!remind me of X on Y" (datetime) version of the function.
     """
-    reminder_name_parts, reminder_date_parts = separate_name_and_date(
-        msg_parts, "on")
+    reminder_name_parts, reminder_date_parts = separate_name_and_date(msg_parts, "on")
     reminder_name = " ".join(reminder_name_parts)
 
     datetime_validation_status = validate_datetime(reminder_date_parts)
     if datetime_validation_status != "Success":
         return None, None, datetime_validation_status
 
-    reminder_date = get_timezone_aware_datetime(ctx, reminder_date_parts)
+    reminder_date = get_timezone_aware_datetime(reminder_date_parts)
     return reminder_name, reminder_date, datetime_validation_status
 
 
-def extract_info_from_msg_timedelta(
-        ctx: Context, msg_parts: List[str]
+def extract_msg_info_timedelta(
+    msg_parts: List[str],
 ) -> Tuple[Optional[str], Optional[dt.datetime], str]:
     """
     Extracts reminder name and reminder date from the message. Runs a validation check.
     "!remind me of X in Y" (timedelta) version of the function.
     """
-    reminder_name_parts, reminder_date_parts = separate_name_and_date(
-        msg_parts, "in")
+    reminder_name_parts, reminder_date_parts = separate_name_and_date(msg_parts, "in")
     reminder_name = " ".join(reminder_name_parts)
 
     if reminder_date_parts:
-        reminder_date_parts = [
-            elem for elem in reminder_date_parts if elem != "and"
-        ]
+        reminder_date_parts = [elem for elem in reminder_date_parts if elem != "and"]
 
     accepted_time_units = {
-        "years": ["year", "years"],
-        "months": ["month", "months"],
-        "days": ["day", "days"],
+        "years": ["y", "year", "years"],
+        "months": ["mth", "month", "months"],
+        "days": ["d", "day", "days"],
         "hours": ["h", "hour", "hours"],
         "minutes": ["m", "min", "mins", "minute", "minutes"],
         "seconds": ["s", "sec", "secs", "second", "seconds"],
     }
 
-    timedelta_validation_status = validate_timedelta(reminder_date_parts,
-                                                     accepted_time_units)
+    timedelta_validation_status = validate_timedelta(
+        reminder_date_parts, accepted_time_units
+    )
     if timedelta_validation_status != "Success":
         return None, None, timedelta_validation_status
 
     reminder_date = get_timezone_aware_datetime_with_timedelta(
-        ctx, reminder_date_parts, accepted_time_units)
+        reminder_date_parts, accepted_time_units
+    )
     return reminder_name, reminder_date, timedelta_validation_status
 
 
-def separate_name_and_date(msg_parts: List[str],
-                           separator_word: str) -> Tuple[List[str], List[str]]:
+def separate_name_and_date(
+    msg_parts: List[str], separator_word: str
+) -> Tuple[List[str], List[str]]:
     """
     Divides the command's message into reminder name parts and reminder date parts.
     """
     separator_word_idx = msg_parts[::-1].index(separator_word)
-    reminder_name_parts = msg_parts[2:-separator_word_idx - 1]
+    reminder_name_parts = msg_parts[2 : -separator_word_idx - 1]
     reminder_date_parts = msg_parts[-separator_word_idx:]
     return reminder_name_parts, reminder_date_parts
 
@@ -215,8 +221,7 @@ def validate_datetime(reminder_date_parts: List[str]) -> str:
     """
     reminder_date_str = " ".join(reminder_date_parts)
     try:
-        reminder_date = dt.datetime.strptime(reminder_date_str,
-                                             "%d.%m.%y %H:%M")
+        reminder_date = dt.datetime.strptime(reminder_date_str, "%d.%m.%y %H:%M")
     except ValueError:
         return "Give me a correct datetime format!"
 
@@ -228,8 +233,9 @@ def validate_datetime(reminder_date_parts: List[str]) -> str:
     return "Success"
 
 
-def validate_timedelta(reminder_date_parts: List[str],
-                       accepted_time_units: dict) -> str:
+def validate_timedelta(
+    reminder_date_parts: List[str], accepted_time_units: dict
+) -> str:
     """
     Checks if the timedelta information is correct.
     Returns "Success" if the validation succeeded. Returns error message otherwise.
@@ -238,34 +244,38 @@ def validate_timedelta(reminder_date_parts: List[str],
         return "Give me correct datetime info!"
 
     accepted_time_units_values_flat = {
-        item
-        for sublist in accepted_time_units.values() for item in sublist
+        item for sublist in accepted_time_units.values() for item in sublist
     }
 
-    if all(msg_word not in accepted_time_units_values_flat
-           for msg_word in reminder_date_parts):
+    if all(
+        msg_word not in accepted_time_units_values_flat
+        for msg_word in reminder_date_parts
+    ):
         return "Give me correct datetime info!"
 
-    if any(not isinstance(elem, str)
-           and elem not in accepted_time_units_values_flat if idx %
-           2 == 1 else not elem.isdecimal()
-           for idx, elem in enumerate(reminder_date_parts)):
+    if any(
+        not isinstance(elem, str) and elem not in accepted_time_units_values_flat
+        if idx % 2 == 1
+        else not elem.isdecimal()
+        for idx, elem in enumerate(reminder_date_parts)
+    ):
         return "Give me correct datetime info!"
 
     if all(
-            int(elem) == 0 for idx, elem in enumerate(reminder_date_parts)
-            if idx % 2 == 0):
+        int(elem) == 0 for idx, elem in enumerate(reminder_date_parts) if idx % 2 == 0
+    ):
         return "You can't give me zeros only!"
 
     if any(
-            int(elem) > 500000000
-            for idx, elem in enumerate(reminder_date_parts) if idx % 2 == 0):
+        int(elem) > 500000000
+        for idx, elem in enumerate(reminder_date_parts)
+        if idx % 2 == 0
+    ):
         return "Wow, one of those numbers is way too big!"
     return "Success"
 
 
-def get_timezone_aware_datetime(ctx: Context,
-                                reminder_date_parts: List[str]) -> dt.datetime:
+def get_timezone_aware_datetime(reminder_date_parts: List[str]) -> dt.datetime:
     """
     Returns localized (timezone aware) future datetime of a reminder.
     """
@@ -276,8 +286,8 @@ def get_timezone_aware_datetime(ctx: Context,
 
 
 def get_timezone_aware_datetime_with_timedelta(
-        ctx: Context, reminder_date_parts: List[str],
-        accepted_time_units: dict) -> dt.datetime:
+    reminder_date_parts: List[str], accepted_time_units: dict
+) -> dt.datetime:
     """
     Adds timedelta (relativedelta) to current datetime and returns timezone aware
     reminder's future datetime.
@@ -288,36 +298,31 @@ def get_timezone_aware_datetime_with_timedelta(
     for item in reminder_date_parts[::-1]:
         if not previous_item.isdecimal():
             timedelta_units[previous_item] = timedelta_units.get(
-                previous_item, 0) + int(item)
+                previous_item, 0
+            ) + int(item)
         previous_item = item
 
-    relative_delta = relativedelta(
-        years=+sum(
-            timedelta_units.get(x, 0) for x in accepted_time_units["years"]),
-        months=+sum(
-            timedelta_units.get(x, 0) for x in accepted_time_units["months"]),
-        days=+sum(
-            timedelta_units.get(x, 0) for x in accepted_time_units["days"]),
-        hours=+sum(
-            timedelta_units.get(x, 0) for x in accepted_time_units["hours"]),
-        minutes=+sum(
-            timedelta_units.get(x, 0) for x in accepted_time_units["minutes"]),
-        seconds=+sum(
-            timedelta_units.get(x, 0) for x in accepted_time_units["seconds"]),
+    time_offset = relativedelta(
+        years=+sum(timedelta_units.get(x, 0) for x in accepted_time_units["years"]),
+        months=+sum(timedelta_units.get(x, 0) for x in accepted_time_units["months"]),
+        days=+sum(timedelta_units.get(x, 0) for x in accepted_time_units["days"]),
+        hours=+sum(timedelta_units.get(x, 0) for x in accepted_time_units["hours"]),
+        minutes=+sum(timedelta_units.get(x, 0) for x in accepted_time_units["minutes"]),
+        seconds=+sum(timedelta_units.get(x, 0) for x in accepted_time_units["seconds"]),
     )
-    relative_delta.years = min(relative_delta.years, 20)
-    reminder_date = dt.datetime.now(const.LOCAL_TIMEZONE) + relative_delta
-    return reminder_date
+    time_offset.years = min(time_offset.years, 20)
+    return dt.datetime.now(const.LOCAL_TIMEZONE) + time_offset
 
 
-def create_reminder_to_insert(ctx: Context, reminder_name: str,
-                              reminder_date: dt.datetime,
-                              user_msg: str) -> dict:
+def create_reminder_to_insert(
+    ctx: Context, reminder_name: str, reminder_date: dt.datetime, user_msg: str
+) -> dict:
     """
     Constructs a dictionary containing all information about a reminder.
     """
-    reminder_name_short = (f"{reminder_name[:50]} [...]"
-                           if len(reminder_name) > 50 else reminder_name)
+    reminder_name_short = (
+        f"{reminder_name[:50]} [...]" if len(reminder_name) > 50 else reminder_name
+    )
     current_datetime = dt.datetime.now(const.LOCAL_TIMEZONE)
     hash_id = const.hashids.encode(convert_to_milliseconds(current_datetime))
     data = {
@@ -346,24 +351,25 @@ def insert_reminder_to_database(author_id: int, data: dict) -> str:
         return "Something went wrong, try again!"
 
     user_profile_update_or_create_status = update_or_create_user_profile(
-        author_id, reminder_insertion_status.inserted_id)
+        author_id, reminder_insertion_status.inserted_id
+    )
     if user_profile_update_or_create_status != "Success":
         return "Something went wrong, try again!"
     return "Success"
 
 
-async def confirm_creating_reminder(ctx: Context, reminder_date: dt.datetime,
-                                    reminder_friendly_id: str) -> None:
+async def confirm_creating_reminder(
+    ctx: Context, reminder_date: dt.datetime, reminder_friendly_id: str
+) -> None:
     """Sends a message confirming creating a new reminder."""
     notification_description = (
-        "I will remind you of that on **{}**, <@{}>.\nReminder's ID: `{}`".
-        format(
+        "I will remind you of that on **{}**, <@{}>.\nReminder's ID: `{}`".format(
             reminder_date.strftime("%d.%m.%Y %H:%M:%S"),
             ctx.author.id,
             reminder_friendly_id,
-        ))
-    current_datetime = dt.datetime.now(
-        const.LOCAL_TIMEZONE).strftime("%d.%m.%Y %H:%M:%S")
-    await display_notification(ctx,
-                               notification_description,
-                               text=current_datetime)
+        )
+    )
+    current_datetime = dt.datetime.now(const.LOCAL_TIMEZONE).strftime(
+        "%d.%m.%Y %H:%M:%S"
+    )
+    await display_notification(ctx, notification_description, text=current_datetime)
