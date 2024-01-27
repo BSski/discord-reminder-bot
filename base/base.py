@@ -4,8 +4,8 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import Context
 
-from base.texts import Desc, Help
-from base.utils import display_notification
+from base.texts import Help
+from utils.utils import display_notification
 import global_const
 
 

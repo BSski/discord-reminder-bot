@@ -27,11 +27,13 @@ from reminders.user_profile import (
     update_user_profile_with_past_reminder,
 )
 from reminders.utils import (
+    utc_to_local,
+    validate_reminder_friendly_id,
+)
+from utils.utils import (
     display_error,
     display_error_on_channel,
     display_notification,
-    utc_to_local,
-    validate_reminder_friendly_id,
 )
 
 
@@ -294,7 +296,7 @@ async def check_reminders(bot: bot.Bot) -> None:
 
         # FIXME: Why just not shut the program down here?
         if err := await delete_done_reminders(reminders_to_delete):
-            print("\n\n\nDANGEROUS: deletion_status \n\n\n")
+            print("\n\n\nCRITICAL: deletion_status \n\n\n")
             await display_error_on_channel(channel, err)
             continue
         await asyncio.sleep(const.TIME_BETWEEN_REMINDER_CHECKS)

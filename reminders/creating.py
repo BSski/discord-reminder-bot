@@ -10,9 +10,9 @@ from texts import Error
 from reminders.user_profile import update_or_create_user_profile
 from reminders.utils import (
     convert_to_milliseconds,
-    display_notification,
     utc_to_local,
 )
+from utils.utils import display_notification
 
 
 def validate_user_profile(ctx: Context) -> str:

@@ -3,7 +3,6 @@ import os
 import discord
 from discord.ext import commands
 
-from base.utils import reply_to_greeting_with_a_chance
 import global_const
 from keep_alive import keep_alive
 from reminders.reminders_bot import check_reminders
@@ -26,10 +25,10 @@ async def on_ready() -> None:
     bot.loop.create_task(check_reminders(bot))
 
 
+# TODO: Establish if can delete this one.
 @bot.event
 async def on_message(message: discord.message.Message) -> None:
     """Called when a Message is created and sent."""
-    await reply_to_greeting_with_a_chance(message, bot)
     await bot.process_commands(message)
 
 

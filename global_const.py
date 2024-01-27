@@ -16,9 +16,6 @@ LOCAL_TIMEZONE = pytz.timezone(os.environ["LOCAL_TIMEZONE"])
 CLUSTER = MongoClient(MONGODB_LINK.format(PW))
 DB = CLUSTER[DATABASE_NAME]
 
-GREETING = "elo"
-CHANCE_OF_REPLYING_TO_GREETING = 4
-
 COMMANDS_ALIASES = {
     "shutdown": (),
     "say_datetime": (
