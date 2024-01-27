@@ -18,7 +18,7 @@ from reminders.utils import (
 def validate_user_profile(ctx: Context) -> str:
     """
     Checks if the user didn't surpass any reminder limit.
-    Returns "Success" if the validation succeeded. Returns error message otherwise.
+    Returns empty string if the validation succeeded. Returns error message otherwise.
     """
     user_reminders_info = const.REMINDERBOT_USERS_PROFILES.find_one(
         {"_id": ctx.author.id}
@@ -28,28 +28,28 @@ def validate_user_profile(ctx: Context) -> str:
         return Error.CANT_GET_USER
 
     user_all_reminders = user_reminders_info["user_all_reminders"]
-    short_cooldown_validation_status = check_if_cooldown(
+    err = check_if_cooldown(
         user_all_reminders,
         time_limit_object=dt.timedelta(minutes=20),
         time_limit="20 minutes",  # FIXME: make it const and format string here with it
         max_active_reminders=30,
     )
-    if short_cooldown_validation_status != "Success":
-        return short_cooldown_validation_status
+    if err:
+        return err
 
-    long_cooldown_validation_status = check_if_cooldown(
+    err = check_if_cooldown(
         user_all_reminders,
         time_limit_object=dt.timedelta(days=30),
         time_limit="30 days",
         max_active_reminders=1200,
     )
-    if long_cooldown_validation_status != "Success":
-        return long_cooldown_validation_status
+    if err:
+        return err
 
     user_future_reminders = user_reminders_info["user_future_reminders"]
     if len(user_future_reminders) > 999:
         return Error.TOO_MANY_ACTIVE_REMINDERS
-    return "Success"
+    return ""
 
 
 def check_if_cooldown(
@@ -60,7 +60,7 @@ def check_if_cooldown(
 ) -> str:
     """
     Checks if the user didn't surpass a reminder limit.
-    Returns "Success" if the check succeeded. Returns error message otherwise.
+    Returns empty string if the check succeeded. Returns error message otherwise.
     """
     if len(user_all_reminders) >= max_active_reminders:
         x = const.PAST_REMINDERS.find_one(
@@ -76,16 +76,14 @@ def check_if_cooldown(
             utc_to_local(x["date_created"])
             > dt.datetime.now(const.LOCAL_TIMEZONE) - time_limit_object
         ):
-            return Error.THROTTLE.format(
-                max_active_reminders, time_limit
-            )
-    return "Success"
+            return Error.THROTTLE.format(max_active_reminders, time_limit)
+    return ""
 
 
 def validate_msg(msg: Optional[str]) -> str:
     """
     Checks if the content of the command fits the requirements.
-    Returns "Success" if the check succeeded. Returns error message otherwise.
+    Returns empty string if the check succeeded. Returns error message otherwise.
     """
     if msg is None:
         return Error.INVALID_FORMAT
@@ -104,7 +102,7 @@ def validate_msg(msg: Optional[str]) -> str:
 
     if "on" not in msg_parts and "in" not in msg_parts:
         return Error.INVALID_FORMAT
-    return "Success"
+    return ""
 
 
 def extract_info_from_msg(
@@ -118,34 +116,32 @@ def extract_info_from_msg(
             (
                 reminder_name,
                 reminder_date,
-                extraction_status,
+                err,
             ) = extract_msg_info_datetime(msg_parts)
         else:
             (
                 reminder_name,
                 reminder_date,
-                extraction_status,
+                err,
             ) = extract_msg_info_timedelta(msg_parts)
 
     elif "on" in msg_parts:
         (
             reminder_name,
             reminder_date,
-            extraction_status,
+            err,
         ) = extract_msg_info_datetime(msg_parts)
 
     elif "in" in msg_parts:
         (
             reminder_name,
             reminder_date,
-            extraction_status,
+            err,
         ) = extract_msg_info_timedelta(msg_parts)
     else:
-        extraction_status = Error.NO_ON_IN_IN_MSG
+        err = Error.NO_ON_IN_IN_MSG
 
-    if extraction_status != "Success":
-        return None, None, extraction_status
-    return reminder_name, reminder_date, "Success"
+    return (None, None, err) if err else (reminder_name, reminder_date, "")
 
 
 def extract_msg_info_datetime(
@@ -158,12 +154,12 @@ def extract_msg_info_datetime(
     reminder_name_parts, reminder_date_parts = separate_name_and_date(msg_parts, "on")
     reminder_name = " ".join(reminder_name_parts)
 
-    datetime_validation_status = validate_datetime(reminder_date_parts)
-    if datetime_validation_status != "Success":
-        return None, None, datetime_validation_status
+    err = validate_datetime(reminder_date_parts)
+    if err:
+        return None, None, err
 
     reminder_date = get_timezone_aware_datetime(reminder_date_parts)
-    return reminder_name, reminder_date, datetime_validation_status
+    return reminder_name, reminder_date, err
 
 
 def extract_msg_info_timedelta(
@@ -188,16 +184,13 @@ def extract_msg_info_timedelta(
         "seconds": ["s", "sec", "secs", "second", "seconds"],
     }
 
-    timedelta_validation_status = validate_timedelta(
-        reminder_date_parts, accepted_time_units
-    )
-    if timedelta_validation_status != "Success":
-        return None, None, timedelta_validation_status
+    if err := validate_timedelta(reminder_date_parts, accepted_time_units):
+        return None, None, err
 
     reminder_date = get_timezone_aware_datetime_with_timedelta(
         reminder_date_parts, accepted_time_units
     )
-    return reminder_name, reminder_date, timedelta_validation_status
+    return reminder_name, reminder_date, err
 
 
 def separate_name_and_date(
@@ -213,7 +206,7 @@ def separate_name_and_date(
 def validate_datetime(reminder_date_parts: List[str]) -> str:
     """
     Checks if the datetime is correct.
-    Returns "Success" if the validation succeeded. Returns error message otherwise.
+    Returns empty string if the validation succeeded. Returns error message otherwise.
     """
     reminder_date_str = " ".join(reminder_date_parts)
     try:
@@ -226,7 +219,7 @@ def validate_datetime(reminder_date_parts: List[str]) -> str:
 
     if reminder_date < current_date:
         return Error.CANT_REMIND_IN_PAST
-    return "Success"
+    return ""
 
 
 def validate_timedelta(
@@ -234,7 +227,7 @@ def validate_timedelta(
 ) -> str:
     """
     Checks if the timedelta information is correct.
-    Returns "Success" if the validation succeeded. Returns error message otherwise.
+    Returns empty string if the validation succeeded. Returns error message otherwise.
     """
     if not reminder_date_parts:
         return Error.WRONG_DATETIME_INFO
@@ -271,7 +264,7 @@ def validate_timedelta(
         if idx % 2 == 0
     ):
         return Error.TOO_BIG_NUMBER
-    return "Success"
+    return ""
 
 
 def get_timezone_aware_datetime(reminder_date_parts: List[str]) -> dt.datetime:
@@ -320,7 +313,7 @@ def create_reminder_to_insert(
     )
     current_datetime = dt.datetime.now(const.LOCAL_TIMEZONE)
     hash_id = const.hashids.encode(convert_to_milliseconds(current_datetime))
-    data = {
+    return {
         "friendly_id": hash_id,
         "author_id": ctx.author.id,
         "author_name": ctx.author.name,
@@ -333,24 +326,22 @@ def create_reminder_to_insert(
         "done": False,
         "original_message": user_msg,
     }
-    return data
 
 
 def insert_reminder_to_database(author_id: int, data: dict) -> str:
     """
     Inserts a new reminder to the FUTURE_REMINDERS collection and updates user profile.
-    Returns "Success" if the insertions succeeded. Returns error message otherwise.
+    Returns empty string if the insertions succeeded. Returns error message otherwise.
     """
     reminder_insertion_status = const.FUTURE_REMINDERS.insert_one(data)
     if not reminder_insertion_status.inserted_id:
         return Error.TRY_AGAIN
 
-    user_profile_update_or_create_status = update_or_create_user_profile(
+    if err := update_or_create_user_profile(
         author_id, reminder_insertion_status.inserted_id
-    )
-    if user_profile_update_or_create_status != "Success":
+    ):
         return Error.TRY_AGAIN
-    return "Success"
+    return ""
 
 
 async def confirm_creating_reminder(

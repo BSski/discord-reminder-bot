@@ -6,6 +6,7 @@ from discord.ext import commands
 from discord.ext.commands import bot, Context
 
 import reminders.const as const
+from reminders.texts import Error
 
 
 def get_commands_prefix(client: bot.Bot, message: discord.message.Message) -> list:
@@ -53,19 +54,18 @@ def validate_reminder_friendly_id(
 ) -> str:
     """
     Checks whether supposed reminder's friendly ID is correct.
-    Returns "Success" if the check succeeded. Returns error message otherwise.
+    Returns empty string if the check succeeded. Returns error message otherwise.
     """
     if len(supposed_friendly_reminder_id.split()) != 1:
-        return "Give me a single ID!"
-
+        return Error.MUST_BE_SINGLE_ID
     if len(supposed_friendly_reminder_id) > 35:
-        return "Wow, that's a long ID! Too long for sure!"
-    return "Success"
+        return Error.TOO_LONG_ID
+    return ""
 
 
 def convert_to_milliseconds(current_datetime: dt.datetime) -> int:
     current_milliseconds = int(f"{current_datetime.microsecond:0<4}")
-    milliseconds_stamp = sum(
+    return sum(
         [
             int(str(current_datetime.year)[-1:]) * 365 * 31 * 24 * 60 * 60 * 1000,
             current_datetime.month * 31 * 24 * 60 * 60 * 1000,
@@ -76,4 +76,3 @@ def convert_to_milliseconds(current_datetime: dt.datetime) -> int:
             current_milliseconds,
         ]
     )
-    return milliseconds_stamp

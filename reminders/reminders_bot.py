@@ -62,27 +62,26 @@ async def help_reminders(ctx: Context) -> None:
 )
 async def create_reminder(ctx: Context, *, msg: str = None) -> None:
     """Adds a new reminder to the database."""
-    user_profile_validation_status = validate_user_profile(ctx)
-    if user_profile_validation_status != "Success":
-        await display_error(ctx, user_profile_validation_status)
+    err = validate_user_profile(ctx)
+    if err:
+        await display_error(ctx, err)
         return
 
-    message_validation_status = validate_msg(msg)
-    if message_validation_status != "Success":
-        await display_error(ctx, message_validation_status)
+    err = validate_msg(msg)
+    if err:
+        await display_error(ctx, err)
         return
 
     msg_parts = msg.split()
-    reminder_name, reminder_date, extraction_status = extract_info_from_msg(msg_parts)
-    if extraction_status != "Success":
-        await display_error(ctx, extraction_status)
+    reminder_name, reminder_date, err = extract_info_from_msg(msg_parts)
+    if err:
+        await display_error(ctx, err)
         return
 
     reminder_to_insert = create_reminder_to_insert(
         ctx, reminder_name, reminder_date, msg
     )
-    insertion_status = insert_reminder_to_database(ctx.author.id, reminder_to_insert)
-    if insertion_status != "Success":
+    if err := insert_reminder_to_database(ctx.author.id, reminder_to_insert):
         error_msg = Error.INSERTION
         await display_error(ctx, error_msg)
         return
@@ -189,9 +188,8 @@ async def show_reminder(
         await display_error(ctx, Error.NO_REMINDER_ID)
         return
 
-    id_validation_status = validate_reminder_friendly_id(supposed_reminder_friendly_id)
-    if id_validation_status != "Success":
-        await display_error(ctx, id_validation_status)
+    if err := validate_reminder_friendly_id(supposed_reminder_friendly_id):
+        await display_error(ctx, err)
         return
     reminder_friendly_id = supposed_reminder_friendly_id
 
@@ -239,9 +237,8 @@ async def delete_reminder(
         await display_error(ctx, Error.NO_REMINDER_ID_DELETE)
         return
 
-    id_validation_status = validate_reminder_friendly_id(supposed_reminder_friendly_id)
-    if id_validation_status != "Success":
-        await display_error(ctx, id_validation_status)
+    if err := validate_reminder_friendly_id(supposed_reminder_friendly_id):
+        await display_error(ctx, err)
         return
 
     reminder_friendly_id = supposed_reminder_friendly_id
@@ -254,10 +251,9 @@ async def delete_reminder(
         await display_error(ctx, Error.NO_REMINDER_ID_DELETE)
         return
 
-    updating_user_profile_status = update_user_profile_when_canceling_reminder(
+    if err := update_user_profile_when_canceling_reminder(
         ctx.author.id, reminder_to_delete["_id"]
-    )
-    if updating_user_profile_status != "Success":
+    ):
         await display_error(ctx, Error.TRY_AGAIN)
         return
 
@@ -284,25 +280,22 @@ async def check_reminders(bot: bot.Bot) -> None:
                 continue
             await remind_user(bot, reminder["author_id"], reminder)
 
-            reminder_insertion_status = await add_to_past_reminders(reminder)
-            if reminder_insertion_status != "Success":
-                await display_error_on_channel(channel, reminder_insertion_status)
+            if err := await add_to_past_reminders(reminder):
+                await display_error_on_channel(channel, err)
                 continue
 
-            user_profile_updating_status = update_user_profile_with_past_reminder(
+            if err := update_user_profile_with_past_reminder(
                 reminder["author_id"], reminder["_id"]
-            )
-            if user_profile_updating_status != "Success":
-                await display_error_on_channel(channel, user_profile_updating_status)
+            ):
+                await display_error_on_channel(channel, err)
                 continue
 
             reminders_to_delete.append(reminder["_id"])
 
         # FIXME: Why just not shut the program down here?
-        deletion_status = await delete_done_reminders(reminders_to_delete)
-        if deletion_status != "Success":
+        if err := await delete_done_reminders(reminders_to_delete):
             print("\n\n\nDANGEROUS: deletion_status \n\n\n")
-            await display_error_on_channel(channel, deletion_status)
+            await display_error_on_channel(channel, err)
             continue
         await asyncio.sleep(const.TIME_BETWEEN_REMINDER_CHECKS)
 

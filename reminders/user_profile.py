@@ -11,7 +11,7 @@ def update_or_create_user_profile(
     If user's profile exists in REMINDERBOT_USERS_PROFILES collection, updates it
     with the freshly made reminder's ID. If the profile doesn't exist yet, creates one
     with the reminder's ID in it.
-    Returns "Success" if the update/insert operation succeeded. Returns error message
+    Returns empty string if the update/insert operation succeeded. Returns error message
     otherwise.
     """
     user_profile_updating_status = const.REMINDERBOT_USERS_PROFILES.update_one(
@@ -36,7 +36,7 @@ def update_or_create_user_profile(
         )
         if not user_profile_insertion_status.inserted_id:
             return Error.TRY_AGAIN
-    return "Success"
+    return ""
 
 
 def update_user_profile_with_past_reminder(
@@ -45,7 +45,7 @@ def update_user_profile_with_past_reminder(
     """
     Updates user's profile when a reminder is reminded. Updates reminder counts
     and pulls the reminder's ID from the user_future_reminders ID list.
-    Returns "Success" if the update operation succeeded. Returns error message
+    Returns empty string if the update operation succeeded. Returns error message
     otherwise.
     """
     user_profile_updating_status = const.REMINDERBOT_USERS_PROFILES.update_one(
@@ -60,9 +60,7 @@ def update_user_profile_with_past_reminder(
             },
         },
     )
-    if not user_profile_updating_status.modified_count:
-        return Error.CANT_REMOVE
-    return "Success"
+    return "" if user_profile_updating_status.modified_count else Error.CANT_REMOVE
 
 
 def update_user_profile_when_canceling_reminder(
@@ -71,7 +69,7 @@ def update_user_profile_when_canceling_reminder(
     """
     Updates user's profile when a reminder is deleted. Decrements future reminders
     count and pulls the reminder's ID from the ID lists.
-    Returns "Success" if the update operation succeeded. Returns error message
+    Returns empty string if the update operation succeeded. Returns error message
     otherwise.
     """
     user_profile_updating_status = const.REMINDERBOT_USERS_PROFILES.update_one(
@@ -84,6 +82,4 @@ def update_user_profile_when_canceling_reminder(
             },
         },
     )
-    if not user_profile_updating_status.modified_count:
-        return Error.CANT_REMOVE
-    return "Success"
+    return "" if user_profile_updating_status.modified_count else Error.CANT_REMOVE

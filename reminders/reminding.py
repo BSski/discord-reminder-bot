@@ -35,7 +35,7 @@ async def add_to_past_reminders(reminder: dict) -> str:
     reminder_insertion_status = const.PAST_REMINDERS.insert_one(reminder)
     if not reminder_insertion_status.inserted_id:
         return Error.CANT_REMOVE
-    return "Success"
+    return ""
 
 
 async def delete_done_reminders(
@@ -46,4 +46,4 @@ async def delete_done_reminders(
         deletion_status = const.FUTURE_REMINDERS.delete_one({"_id": reminder_id})
         if not deletion_status.deleted_count:
             return Error.CANT_REMOVE
-    return "Success"
+    return ""
