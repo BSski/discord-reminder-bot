@@ -183,17 +183,16 @@ async def my_reminders(ctx: Context) -> None:
     aliases=const.COMMANDS_ALIASES["show_reminder"], description=Help.SHOW_REMINDER
 )
 async def show_reminder(
-    ctx: Context, *, supposed_reminder_friendly_id: str = None
+    ctx: Context, *, reminder_friendly_id: str = None
 ) -> None:
     """Shows one reminder basing on a passed ID."""
-    if supposed_reminder_friendly_id is None:
+    if reminder_friendly_id is None:
         await display_error(ctx, Error.NO_REMINDER_ID)
         return
 
-    if err := validate_reminder_friendly_id(supposed_reminder_friendly_id):
+    if err := validate_reminder_friendly_id(reminder_friendly_id):
         await display_error(ctx, err)
         return
-    reminder_friendly_id = supposed_reminder_friendly_id
 
     reminder = const.FUTURE_REMINDERS.find_one({"friendly_id": reminder_friendly_id})
     if reminder is None:
@@ -232,18 +231,16 @@ async def show_reminder(
     description=Help.DELETE_REMINDER,
 )
 async def delete_reminder(
-    ctx: Context, *, supposed_reminder_friendly_id: str = None
+    ctx: Context, *, reminder_friendly_id: str = None
 ) -> None:
     """Deletes one reminder basing on a passed ID."""
-    if supposed_reminder_friendly_id is None:
+    if reminder_friendly_id is None:
         await display_error(ctx, Error.NO_REMINDER_ID_DELETE)
         return
 
-    if err := validate_reminder_friendly_id(supposed_reminder_friendly_id):
+    if err := validate_reminder_friendly_id(reminder_friendly_id):
         await display_error(ctx, err)
         return
-
-    reminder_friendly_id = supposed_reminder_friendly_id
 
     reminder_to_delete = const.FUTURE_REMINDERS.find_one(
         {"friendly_id": reminder_friendly_id, "author_id": ctx.author.id}

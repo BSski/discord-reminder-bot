@@ -29,15 +29,15 @@ def utc_to_local(utc_date: dt.datetime) -> dt.datetime:
 
 
 def validate_reminder_friendly_id(
-    supposed_friendly_reminder_id: str,
+    friendly_reminder_id: str,
 ) -> str:
     """
-    Checks whether supposed reminder's friendly ID is correct.
+    Checks whether reminder's friendly ID is correct.
     Returns empty string if the check succeeded. Returns error message otherwise.
     """
-    if len(supposed_friendly_reminder_id.split()) != 1:
+    if len(friendly_reminder_id.split()) != 1:
         return Error.MUST_BE_SINGLE_ID
-    if len(supposed_friendly_reminder_id) > 35:
+    if len(friendly_reminder_id) > 35:
         return Error.TOO_LONG_ID
     return ""
 
