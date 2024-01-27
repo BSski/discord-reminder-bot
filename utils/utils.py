@@ -21,4 +21,3 @@ async def display_notification(
         title="Notification", description=embed_description, color=0x0000FF
     )
     await ctx.send(text, embed=embed)
-

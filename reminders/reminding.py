@@ -1,5 +1,4 @@
 import bson
-from typing import List
 
 import discord
 from discord.ext.commands import bot
@@ -39,7 +38,7 @@ async def add_to_past_reminders(reminder: dict) -> str:
 
 
 async def delete_done_reminders(
-    reminders_to_delete: List[bson.objectid.ObjectId],
+    reminders_to_delete: list[bson.objectid.ObjectId],
 ) -> str:
     """Deletes reminded reminders from FUTURE_REMINDERS collection."""
     for reminder_id in reminders_to_delete:

@@ -1,5 +1,4 @@
 import datetime as dt
-from typing import List, Optional, Tuple
 
 from dateutil.relativedelta import relativedelta
 
@@ -80,7 +79,7 @@ def check_if_cooldown(
     return ""
 
 
-def validate_msg(msg: Optional[str]) -> str:
+def validate_msg(msg: str | None) -> str:
     """
     Checks if the content of the command fits the requirements.
     Returns empty string if the check succeeded. Returns error message otherwise.
@@ -106,8 +105,8 @@ def validate_msg(msg: Optional[str]) -> str:
 
 
 def extract_info_from_msg(
-    msg_parts: List[str],
-) -> Tuple[Optional[str], Optional[dt.datetime], str]:
+    msg_parts: list[str],
+) -> tuple[str | None, dt.datetime | None, str]:
     """Extracts reminder name and reminder date from the command's message."""
     if "on" in msg_parts and "in" in msg_parts:
         datetime_reminder_separator_idx = msg_parts[::-1].index("on")
@@ -145,8 +144,8 @@ def extract_info_from_msg(
 
 
 def extract_msg_info_datetime(
-    msg_parts: List[str],
-) -> Tuple[Optional[str], Optional[dt.datetime], str]:
+    msg_parts: list[str],
+) -> tuple[str | None, dt.datetime | None, str]:
     """
     Extracts reminder name and reminder date from the message. Runs a validation check.
     "!remind me of X on Y" (datetime) version of the function.
@@ -163,8 +162,8 @@ def extract_msg_info_datetime(
 
 
 def extract_msg_info_timedelta(
-    msg_parts: List[str],
-) -> Tuple[Optional[str], Optional[dt.datetime], str]:
+    msg_parts: list[str],
+) -> tuple[str | None, dt.datetime | None, str]:
     """
     Extracts reminder name and reminder date from the message. Runs a validation check.
     "!remind me of X in Y" (timedelta) version of the function.
@@ -194,8 +193,8 @@ def extract_msg_info_timedelta(
 
 
 def separate_name_and_date(
-    msg_parts: List[str], separator_word: str
-) -> Tuple[List[str], List[str]]:
+    msg_parts: list[str], separator_word: str
+) -> tuple[list[str], list[str]]:
     """Divides the command's message into reminder name parts and reminder date parts."""
     separator_word_idx = msg_parts[::-1].index(separator_word)
     reminder_name_parts = msg_parts[2 : -separator_word_idx - 1]
@@ -203,7 +202,7 @@ def separate_name_and_date(
     return reminder_name_parts, reminder_date_parts
 
 
-def validate_datetime(reminder_date_parts: List[str]) -> str:
+def validate_datetime(reminder_date_parts: list[str]) -> str:
     """
     Checks if the datetime is correct.
     Returns empty string if the validation succeeded. Returns error message otherwise.
@@ -223,7 +222,7 @@ def validate_datetime(reminder_date_parts: List[str]) -> str:
 
 
 def validate_timedelta(
-    reminder_date_parts: List[str], accepted_time_units: dict
+    reminder_date_parts: list[str], accepted_time_units: dict
 ) -> str:
     """
     Checks if the timedelta information is correct.
@@ -267,7 +266,7 @@ def validate_timedelta(
     return ""
 
 
-def get_timezone_aware_datetime(reminder_date_parts: List[str]) -> dt.datetime:
+def get_timezone_aware_datetime(reminder_date_parts: list[str]) -> dt.datetime:
     """Returns localized (timezone aware) future datetime of a reminder."""
     reminder_date_str = " ".join(reminder_date_parts)
     reminder_date = dt.datetime.strptime(reminder_date_str, "%d.%m.%y %H:%M")
@@ -276,7 +275,7 @@ def get_timezone_aware_datetime(reminder_date_parts: List[str]) -> dt.datetime:
 
 
 def get_timezone_aware_datetime_with_timedelta(
-    reminder_date_parts: List[str], accepted_time_units: dict
+    reminder_date_parts: list[str], accepted_time_units: dict
 ) -> dt.datetime:
     """
     Adds timedelta (relativedelta) to current datetime and returns timezone aware
