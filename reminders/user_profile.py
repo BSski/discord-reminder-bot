@@ -14,7 +14,7 @@ def update_or_create_user_profile(
     Returns empty string if the update/insert operation succeeded. Returns error message
     otherwise.
     """
-    user_profile_updating_status = const.REMINDERBOT_USERS_PROFILES.update_one(
+    updating_result = const.REMINDERBOT_USERS_PROFILES.update_one(
         {"_id": author_id},
         {
             "$inc": {"future_reminders_count": 1},
@@ -24,8 +24,8 @@ def update_or_create_user_profile(
             },
         },
     )
-    if user_profile_updating_status.modified_count == 0:
-        user_profile_insertion_status = const.REMINDERBOT_USERS_PROFILES.insert_one(
+    if updating_result.modified_count == 0:
+        insertion_result = const.REMINDERBOT_USERS_PROFILES.insert_one(
             {
                 "_id": author_id,
                 "future_reminders_count": 1,
@@ -34,7 +34,7 @@ def update_or_create_user_profile(
                 "user_all_reminders": [inserted_reminder_id],
             }
         )
-        if not user_profile_insertion_status.inserted_id:
+        if not insertion_result.inserted_id:
             return Error.TRY_AGAIN
     return ""
 
@@ -48,7 +48,7 @@ def update_user_profile_with_past_reminder(
     Returns empty string if the update operation succeeded. Returns error message
     otherwise.
     """
-    user_profile_updating_status = const.REMINDERBOT_USERS_PROFILES.update_one(
+    result = const.REMINDERBOT_USERS_PROFILES.update_one(
         {"_id": author_id},
         {
             "$inc": {
@@ -60,7 +60,7 @@ def update_user_profile_with_past_reminder(
             },
         },
     )
-    return "" if user_profile_updating_status.modified_count else Error.CANT_REMOVE
+    return "" if result.modified_count else Error.CANT_REMOVE
 
 
 def update_user_profile_when_canceling_reminder(
@@ -72,7 +72,7 @@ def update_user_profile_when_canceling_reminder(
     Returns empty string if the update operation succeeded. Returns error message
     otherwise.
     """
-    user_profile_updating_status = const.REMINDERBOT_USERS_PROFILES.update_one(
+    result = const.REMINDERBOT_USERS_PROFILES.update_one(
         {"_id": author_id},
         {
             "$inc": {"future_reminders_count": -1},
@@ -82,4 +82,4 @@ def update_user_profile_when_canceling_reminder(
             },
         },
     )
-    return "" if user_profile_updating_status.modified_count else Error.CANT_REMOVE
+    return "" if result.modified_count else Error.CANT_REMOVE

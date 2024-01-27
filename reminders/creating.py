@@ -332,12 +332,12 @@ def insert_reminder_to_database(author_id: int, data: dict) -> str:
     Inserts a new reminder to the FUTURE_REMINDERS collection and updates user profile.
     Returns empty string if the insertions succeeded. Returns error message otherwise.
     """
-    reminder_insertion_status = const.FUTURE_REMINDERS.insert_one(data)
-    if not reminder_insertion_status.inserted_id:
+    result = const.FUTURE_REMINDERS.insert_one(data)
+    if not result.inserted_id:
         return Error.TRY_AGAIN
 
     if err := update_or_create_user_profile(
-        author_id, reminder_insertion_status.inserted_id
+        author_id, result.inserted_id
     ):
         return Error.TRY_AGAIN
     return ""

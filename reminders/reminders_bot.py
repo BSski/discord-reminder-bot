@@ -259,10 +259,10 @@ async def delete_reminder(
         await display_error(ctx, Error.TRY_AGAIN)
         return
 
-    reminder_deletion_status = const.FUTURE_REMINDERS.delete_one(
+    result = const.FUTURE_REMINDERS.delete_one(
         {"friendly_id": reminder_friendly_id, "author_id": ctx.author.id}
     )
-    if reminder_deletion_status.deleted_count == 0:
+    if result.deleted_count == 0:
         await display_error(ctx, Error.TRY_AGAIN)
         return
 
@@ -296,7 +296,7 @@ async def check_reminders(bot: bot.Bot) -> None:
 
         # FIXME: Why just not shut the program down here?
         if err := await delete_done_reminders(reminders_to_delete):
-            print("\n\n\nCRITICAL: deletion_status \n\n\n")
+            print("\n\n\nCRITICAL: delete_done_reminders() \n\n\n")
             await display_error_on_channel(channel, err)
             continue
         await asyncio.sleep(const.TIME_BETWEEN_REMINDER_CHECKS)
