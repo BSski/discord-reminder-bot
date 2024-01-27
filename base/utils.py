@@ -30,7 +30,6 @@ async def reply_to_greeting_with_a_chance(
 
 
 async def display_error(ctx: Context, embed_description: str, text: str = None) -> None:
-    """Sends an error."""
     embed = discord.Embed(title="Error", description=embed_description, color=0xFF0000)
     await ctx.send(text, embed=embed)
 
@@ -38,7 +37,6 @@ async def display_error(ctx: Context, embed_description: str, text: str = None) 
 async def display_notification(
     ctx: Context, embed_description: str, text: str = None
 ) -> None:
-    """Sends a notification."""
     embed = discord.Embed(
         title="Notification", description=embed_description, color=0x0000FF
     )

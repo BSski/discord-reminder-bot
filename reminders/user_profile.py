@@ -1,6 +1,7 @@
 import bson
 
 import reminders.const as const
+from reminders.texts import Error
 
 
 def update_or_create_user_profile(
@@ -34,7 +35,7 @@ def update_or_create_user_profile(
             }
         )
         if not user_profile_insertion_status.inserted_id:
-            return "Something went wrong, try again!"
+            return Error.TRY_AGAIN
     return "Success"
 
 
@@ -60,7 +61,7 @@ def update_user_profile_with_past_reminder(
         },
     )
     if not user_profile_updating_status.modified_count:
-        return "Something went wrong when removing the reminder!"
+        return Error.CANT_REMOVE
     return "Success"
 
 
@@ -84,5 +85,5 @@ def update_user_profile_when_canceling_reminder(
         },
     )
     if not user_profile_updating_status.modified_count:
-        return "Something went wrong when canceling the reminder!"
+        return Error.CANT_REMOVE
     return "Success"

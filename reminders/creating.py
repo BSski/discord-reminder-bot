@@ -6,6 +6,7 @@ from dateutil.relativedelta import relativedelta
 from discord.ext.commands import Context
 
 import reminders.const as const
+from texts import Error
 from reminders.user_profile import update_or_create_user_profile
 from reminders.utils import (
     convert_to_milliseconds,
@@ -24,13 +25,13 @@ def validate_user_profile(ctx: Context) -> str:
     )
 
     if not user_reminders_info:
-        return "Can't get info about this user from the database."
+        return Error.CANT_GET_USER
 
     user_all_reminders = user_reminders_info["user_all_reminders"]
     short_cooldown_validation_status = check_if_cooldown(
         user_all_reminders,
         time_limit_object=dt.timedelta(minutes=20),
-        time_limit="20 minutes",
+        time_limit="20 minutes",  # FIXME: make it const and format string here with it
         max_active_reminders=30,
     )
     if short_cooldown_validation_status != "Success":
@@ -47,9 +48,7 @@ def validate_user_profile(ctx: Context) -> str:
 
     user_future_reminders = user_reminders_info["user_future_reminders"]
     if len(user_future_reminders) > 999:
-        return (
-            "You've exceeded the limit! You can have maximum of 1000 active reminders."
-        )
+        return Error.TOO_MANY_ACTIVE_REMINDERS
     return "Success"
 
 
@@ -72,12 +71,12 @@ def check_if_cooldown(
                 {"_id": user_all_reminders[-max_active_reminders]}
             )
         if not x:
-            return "Something went wrong, try again!"
+            return Error.TRY_AGAIN
         if (
             utc_to_local(x["date_created"])
             > dt.datetime.now(const.LOCAL_TIMEZONE) - time_limit_object
         ):
-            return "You've exceeded the limit! Maximum {} reminders created per {}!".format(
+            return Error.THROTTLE.format(
                 max_active_reminders, time_limit
             )
     return "Success"
@@ -89,30 +88,29 @@ def validate_msg(msg: Optional[str]) -> str:
     Returns "Success" if the check succeeded. Returns error message otherwise.
     """
     if msg is None:
-        return "You didn't use the correct command format!\nCorrect format: !remind me of X on/in Y"
+        return Error.INVALID_FORMAT
 
     if len(msg) > 900:
-        return "That reminder name is too long!"
+        return Error.TOO_LONG_NAME
 
     msg_parts = msg.split()
 
     if len(msg_parts) < 5:
-        return "You didn't use the correct command format!\nCorrect format: !remind me of X on/in Y"
+        return Error.INVALID_FORMAT
 
     msg_parts = tuple(map(lambda a: a.lower(), msg_parts))
     if msg_parts[0] != "me" or msg_parts[1] != "of":
-        return "You didn't use the correct command format!\nCorrect format: !remind me of [...]"
+        return Error.INVALID_FORMAT
 
     if "on" not in msg_parts and "in" not in msg_parts:
-        return "You didn't use the correct command format!\nCorrect format: !remind me of X on/in Y"
+        return Error.INVALID_FORMAT
     return "Success"
 
 
 def extract_info_from_msg(
-        msg_parts: List[str]) -> Tuple[Optional[str], Optional[dt.datetime], str]:
-    """
-    Extracts reminder name and reminder date from the command's message.
-    """
+    msg_parts: List[str],
+) -> Tuple[Optional[str], Optional[dt.datetime], str]:
+    """Extracts reminder name and reminder date from the command's message."""
     if "on" in msg_parts and "in" in msg_parts:
         datetime_reminder_separator_idx = msg_parts[::-1].index("on")
         timedelta_reminder_separator_idx = msg_parts[::-1].index("in")
@@ -143,7 +141,7 @@ def extract_info_from_msg(
             extraction_status,
         ) = extract_msg_info_timedelta(msg_parts)
     else:
-        extraction_status = 'You have to use "on" or "in" in the message!'
+        extraction_status = Error.NO_ON_IN_IN_MSG
 
     if extraction_status != "Success":
         return None, None, extraction_status
@@ -205,9 +203,7 @@ def extract_msg_info_timedelta(
 def separate_name_and_date(
     msg_parts: List[str], separator_word: str
 ) -> Tuple[List[str], List[str]]:
-    """
-    Divides the command's message into reminder name parts and reminder date parts.
-    """
+    """Divides the command's message into reminder name parts and reminder date parts."""
     separator_word_idx = msg_parts[::-1].index(separator_word)
     reminder_name_parts = msg_parts[2 : -separator_word_idx - 1]
     reminder_date_parts = msg_parts[-separator_word_idx:]
@@ -223,13 +219,13 @@ def validate_datetime(reminder_date_parts: List[str]) -> str:
     try:
         reminder_date = dt.datetime.strptime(reminder_date_str, "%d.%m.%y %H:%M")
     except ValueError:
-        return "Give me a correct datetime format!"
+        return Error.WRONG_DATETIME_FORMAT
 
     reminder_date = const.LOCAL_TIMEZONE.localize(reminder_date)
     current_date = dt.datetime.now(const.LOCAL_TIMEZONE)
 
     if reminder_date < current_date:
-        return "You can't create a reminder in the past!"
+        return Error.CANT_REMIND_IN_PAST
     return "Success"
 
 
@@ -241,7 +237,7 @@ def validate_timedelta(
     Returns "Success" if the validation succeeded. Returns error message otherwise.
     """
     if not reminder_date_parts:
-        return "Give me correct datetime info!"
+        return Error.WRONG_DATETIME_INFO
 
     accepted_time_units_values_flat = {
         item for sublist in accepted_time_units.values() for item in sublist
@@ -251,34 +247,35 @@ def validate_timedelta(
         msg_word not in accepted_time_units_values_flat
         for msg_word in reminder_date_parts
     ):
-        return "Give me correct datetime info!"
+        return Error.WRONG_DATETIME_INFO
 
+    # FIXME: Make these "if any" a separate funcs.
     if any(
-        not isinstance(elem, str) and elem not in accepted_time_units_values_flat
-        if idx % 2 == 1
-        else not elem.isdecimal()
+        (
+            not isinstance(elem, str) and elem not in accepted_time_units_values_flat
+            if idx % 2 == 1
+            else not elem.isdecimal()
+        )
         for idx, elem in enumerate(reminder_date_parts)
     ):
-        return "Give me correct datetime info!"
+        return Error.WRONG_DATETIME_INFO
 
     if all(
         int(elem) == 0 for idx, elem in enumerate(reminder_date_parts) if idx % 2 == 0
     ):
-        return "You can't give me zeros only!"
+        return Error.CANT_BE_ONLY_ZEROS
 
     if any(
         int(elem) > 500000000
         for idx, elem in enumerate(reminder_date_parts)
         if idx % 2 == 0
     ):
-        return "Wow, one of those numbers is way too big!"
+        return Error.TOO_BIG_NUMBER
     return "Success"
 
 
 def get_timezone_aware_datetime(reminder_date_parts: List[str]) -> dt.datetime:
-    """
-    Returns localized (timezone aware) future datetime of a reminder.
-    """
+    """Returns localized (timezone aware) future datetime of a reminder."""
     reminder_date_str = " ".join(reminder_date_parts)
     reminder_date = dt.datetime.strptime(reminder_date_str, "%d.%m.%y %H:%M")
     reminder_date = const.LOCAL_TIMEZONE.localize(reminder_date)
@@ -317,9 +314,7 @@ def get_timezone_aware_datetime_with_timedelta(
 def create_reminder_to_insert(
     ctx: Context, reminder_name: str, reminder_date: dt.datetime, user_msg: str
 ) -> dict:
-    """
-    Constructs a dictionary containing all information about a reminder.
-    """
+    """Constructs a dictionary containing all information about a reminder."""
     reminder_name_short = (
         f"{reminder_name[:50]} [...]" if len(reminder_name) > 50 else reminder_name
     )
@@ -348,20 +343,19 @@ def insert_reminder_to_database(author_id: int, data: dict) -> str:
     """
     reminder_insertion_status = const.FUTURE_REMINDERS.insert_one(data)
     if not reminder_insertion_status.inserted_id:
-        return "Something went wrong, try again!"
+        return Error.TRY_AGAIN
 
     user_profile_update_or_create_status = update_or_create_user_profile(
         author_id, reminder_insertion_status.inserted_id
     )
     if user_profile_update_or_create_status != "Success":
-        return "Something went wrong, try again!"
+        return Error.TRY_AGAIN
     return "Success"
 
 
 async def confirm_creating_reminder(
     ctx: Context, reminder_date: dt.datetime, reminder_friendly_id: str
 ) -> None:
-    """Sends a message confirming creating a new reminder."""
     notification_description = (
         "I will remind you of that on **{}**, <@{}>.\nReminder's ID: `{}`".format(
             reminder_date.strftime("%d.%m.%Y %H:%M:%S"),

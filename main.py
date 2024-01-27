@@ -19,9 +19,8 @@ bot.load_extension("base.base")
 @bot.event
 async def on_ready() -> None:
     """
-    Discord.py docs:
-    "Called when the client is done preparing the data received from Discord.
-    Usually after login is successful and the Client.guilds and co. are filled up."
+    Called when the client is done preparing the data received from Discord.
+    Usually after login is successful and the Client.guilds and co. are filled up.
     """
     print("Bot is online.")
     bot.loop.create_task(check_reminders(bot))
@@ -29,10 +28,7 @@ async def on_ready() -> None:
 
 @bot.event
 async def on_message(message: discord.message.Message) -> None:
-    """
-    Discord.py docs:
-    "Called when a Message is created and sent."
-    """
+    """Called when a Message is created and sent."""
     await reply_to_greeting_with_a_chance(message, bot)
     await bot.process_commands(message)
 
@@ -42,5 +38,4 @@ keep_alive()
 try:
     bot.run(global_const.TOKEN)
 except:
-    print("\n\n\n\nThe bot has shut down due to an error.\n\n\n\n")
-    os.system("kill 1")
+    print("\nThe bot has shut down due to an error.")

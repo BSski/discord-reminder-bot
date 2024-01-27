@@ -5,6 +5,7 @@ import discord
 from discord.ext.commands import bot
 
 import reminders.const as const
+from reminders.texts import Error
 from reminders.utils import utc_to_local
 
 
@@ -33,7 +34,7 @@ async def add_to_past_reminders(reminder: dict) -> str:
     reminder["done"] = True
     reminder_insertion_status = const.PAST_REMINDERS.insert_one(reminder)
     if not reminder_insertion_status.inserted_id:
-        return "Something went wrong when removing the reminder!"
+        return Error.CANT_REMOVE
     return "Success"
 
 
@@ -44,5 +45,5 @@ async def delete_done_reminders(
     for reminder_id in reminders_to_delete:
         deletion_status = const.FUTURE_REMINDERS.delete_one({"_id": reminder_id})
         if not deletion_status.deleted_count:
-            return "Something went wrong when removing a reminder!"
+            return Error.CANT_REMOVE
     return "Success"

@@ -2,13 +2,7 @@ import os
 
 from hashids import Hashids
 
-from global_const import (
-    CHANCE_OF_REPLYING_TO_GREETING,
-    CHANNEL_ID,
-    DB,
-    GREETING,
-    LOCAL_TIMEZONE,
-)
+from global_const import DB
 
 PAST_REMINDERS_COLLECTION_NAME = os.environ["PAST_REMINDERS_COLLECTION_NAME"]
 FUTURE_REMINDERS_COLLECTION_NAME = os.environ["FUTURE_REMINDERS_COLLECTION_NAME"]

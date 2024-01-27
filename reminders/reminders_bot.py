@@ -21,6 +21,7 @@ from reminders.reminding import (
     delete_done_reminders,
     remind_user,
 )
+from reminders.texts import Help, Error, Info
 from reminders.user_profile import (
     update_user_profile_when_canceling_reminder,
     update_user_profile_with_past_reminder,
@@ -38,16 +39,16 @@ from reminders.utils import (
 async def help_reminders(ctx: Context) -> None:
     """Displays information about the reminder bot and its commands."""
     commands_names = {
-        create_reminder: "A) !remind me of <reminder_name> on <DD.MM.YY> <HH:MM>\nB) !remind me of <reminder_name> in <number> <unit>",
-        list_reminders: "!list_reminders",
-        my_reminders: "!my_reminders",
-        show_reminder: "!show_reminder <ID>",
-        delete_reminder: "!delete_reminder <ID>",
+        create_reminder: Help.CREATE_REMINDER_EXAMPLE,
+        list_reminders: Help.LIST_REMINDERS_EXAMPLE,
+        my_reminders: Help.MY_REMINDERS_EXAMPLE,
+        show_reminder: Help.SHOW_REMINDER_EXAMPLE,
+        delete_reminder: Help.DELETE_REMINDER_EXAMPLE,
     }
 
     embed = discord.Embed(
         title="ReminderBot",
-        description="I can remind you of stuff! You can mention me or use '!' prefix.\nCommands list:",
+        description=Help.HELP,
         color=0x00FF00,
     )
     for command, command_name in commands_names.items():
@@ -57,7 +58,7 @@ async def help_reminders(ctx: Context) -> None:
 
 @commands.command(
     aliases=const.COMMANDS_ALIASES["create_reminder"],
-    description="A) Adds a reminder on <date>.\nExample: !remind me of the end of the world on 31.12.99 23:59/\nB) Adds a reminder in X time units.\nYou can use years, months, days, hours, minutes and seconds.\nExample: !remind me of cake in the oven in 3 days",
+    description=Help.CREATE_REMINDER,
 )
 async def create_reminder(ctx: Context, *, msg: str = None) -> None:
     """Adds a new reminder to the database."""
@@ -82,7 +83,7 @@ async def create_reminder(ctx: Context, *, msg: str = None) -> None:
     )
     insertion_status = insert_reminder_to_database(ctx.author.id, reminder_to_insert)
     if insertion_status != "Success":
-        error_msg = "I'm sorry, something went wrong and the reminder won't work correctly. Try again!"
+        error_msg = Error.INSERTION
         await display_error(ctx, error_msg)
         return
     await confirm_creating_reminder(
@@ -92,7 +93,7 @@ async def create_reminder(ctx: Context, *, msg: str = None) -> None:
 
 @commands.command(
     aliases=const.COMMANDS_ALIASES["list_reminders"],
-    description="Use when you want to see everyone's reminders.",
+    description=Help.LIST_REMINDERS,
 )
 async def list_reminders(ctx: Context) -> None:
     """Lists maximum of 8 upcoming reminders."""
@@ -100,10 +101,7 @@ async def list_reminders(ctx: Context) -> None:
         const.FUTURE_REMINDERS.find().sort("reminder_date", pymongo.ASCENDING).limit(8)
     )
     if not sorted_reminders:
-        notification_description = (
-            "There are no reminders. Make one!\nCommand format: !remind me of X in/on Y"
-        )
-        await display_notification(ctx, notification_description)
+        await display_notification(ctx, Info.EMPTY_LIST_NOTIFICATION)
         return
 
     embed = discord.Embed(
@@ -134,14 +132,13 @@ async def list_reminders(ctx: Context) -> None:
 
 @commands.command(
     aliases=const.COMMANDS_ALIASES["my_reminders"],
-    description="Use when you want to see your reminders.",
+    description=Help.MY_REMINDERS,
 )
 async def my_reminders(ctx: Context) -> None:
     """Lists maximum of 8 upcoming reminders that belong to the caller."""
     user_profile = const.REMINDERBOT_USERS_PROFILES.find_one({"_id": ctx.author.id})
     if not user_profile:
-        notification_description = "You haven't made any reminders ever. Try making one!\nCommand format: !remind me of X in/on Y"
-        await display_notification(ctx, notification_description)
+        await display_notification(ctx, Info.EMPTY_MY_PROFILE_NOTIFICATION)
         return
 
     reminder_date_sorted_user_specific_reminders = list(
@@ -152,8 +149,7 @@ async def my_reminders(ctx: Context) -> None:
         .limit(8)
     )
     if not reminder_date_sorted_user_specific_reminders:
-        notification_description = "You haven't made any reminders."
-        await display_notification(ctx, notification_description)
+        await display_notification(ctx, Info.NO_REMINDERS_NOTIFICATION)
         return
 
     embed = discord.Embed(
@@ -183,18 +179,14 @@ async def my_reminders(ctx: Context) -> None:
 
 
 @commands.command(
-    aliases=const.COMMANDS_ALIASES["show_reminder"],
-    description="Use when you want to see the details of a certain reminder.\nExample: !show_reminder 32",
+    aliases=const.COMMANDS_ALIASES["show_reminder"], description=Help.SHOW_REMINDER
 )
 async def show_reminder(
     ctx: Context, *, supposed_reminder_friendly_id: str = None
 ) -> None:
     """Shows one reminder basing on a passed ID."""
     if supposed_reminder_friendly_id is None:
-        error_msg = (
-            "You didn't use the correct command!\nCorrect format: !show_reminder <ID>"
-        )
-        await display_error(ctx, error_msg)
+        await display_error(ctx, Error.NO_REMINDER_ID)
         return
 
     id_validation_status = validate_reminder_friendly_id(supposed_reminder_friendly_id)
@@ -205,8 +197,7 @@ async def show_reminder(
 
     reminder = const.FUTURE_REMINDERS.find_one({"friendly_id": reminder_friendly_id})
     if reminder is None:
-        error_msg = "I can't find a reminder with this ID!"
-        await display_error(ctx, error_msg)
+        await display_error(ctx, Error.NO_REMINDER_WITH_THIS_ID)
         return
 
     embed = discord.Embed(
@@ -238,17 +229,14 @@ async def show_reminder(
 
 @commands.command(
     aliases=const.COMMANDS_ALIASES["delete_reminder"],
-    description="Use when you want to delete a reminder.\nExample: !delete_reminder 15",
+    description=Help.DELETE_REMINDER,
 )
 async def delete_reminder(
     ctx: Context, *, supposed_reminder_friendly_id: str = None
 ) -> None:
     """Deletes one reminder basing on a passed ID."""
     if supposed_reminder_friendly_id is None:
-        error_msg = (
-            "You didn't use the correct command!\nCorrect format: !delete_reminder <ID>"
-        )
-        await display_error(ctx, error_msg)
+        await display_error(ctx, Error.NO_REMINDER_ID_DELETE)
         return
 
     id_validation_status = validate_reminder_friendly_id(supposed_reminder_friendly_id)
@@ -263,28 +251,24 @@ async def delete_reminder(
     )
 
     if not reminder_to_delete:
-        error_msg = "There are no reminders of yours with this ID!"
-        await display_error(ctx, error_msg)
+        await display_error(ctx, Error.NO_REMINDER_ID_DELETE)
         return
 
     updating_user_profile_status = update_user_profile_when_canceling_reminder(
         ctx.author.id, reminder_to_delete["_id"]
     )
     if updating_user_profile_status != "Success":
-        error_msg = "Something went wrong, try again!"
-        await display_error(ctx, error_msg)
+        await display_error(ctx, Error.TRY_AGAIN)
         return
 
     reminder_deletion_status = const.FUTURE_REMINDERS.delete_one(
         {"friendly_id": reminder_friendly_id, "author_id": ctx.author.id}
     )
     if reminder_deletion_status.deleted_count == 0:
-        error_msg = "Something went wrong, perhaps the reminder has not been removed!"
-        await display_error(ctx, error_msg)
+        await display_error(ctx, Error.TRY_AGAIN)
         return
 
-    notification_description = "I have removed that reminder for you."
-    await display_notification(ctx, notification_description)
+    await display_notification(ctx, Info.REMINDER_DELETED)
 
 
 async def check_reminders(bot: bot.Bot) -> None:
@@ -314,9 +298,10 @@ async def check_reminders(bot: bot.Bot) -> None:
 
             reminders_to_delete.append(reminder["_id"])
 
+        # FIXME: Why just not shut the program down here?
         deletion_status = await delete_done_reminders(reminders_to_delete)
         if deletion_status != "Success":
-            print("\n\n\n\n\nDANGEROUS: deletion_status \n\n\n\n\n")
+            print("\n\n\nDANGEROUS: deletion_status \n\n\n")
             await display_error_on_channel(channel, deletion_status)
             continue
         await asyncio.sleep(const.TIME_BETWEEN_REMINDER_CHECKS)
