@@ -6,7 +6,8 @@ from keep_alive import keep_alive
 from reminders.reminders_bot import check_reminders
 from reminders.utils import get_commands_prefix
 
-bot = commands.Bot(command_prefix=get_commands_prefix, case_insensitive=True)
+intents = discord.Intents.default()
+bot = commands.Bot(command_prefix=get_commands_prefix, case_insensitive=True, intents=intents)
 bot.remove_command("help")
 
 bot.load_extension("reminders.reminders_bot")
@@ -16,6 +17,7 @@ bot.load_extension("base.base")
 @bot.event
 async def on_ready() -> None:
     """
+    // TODO: Update this docstring after migrating to Discord.py 2.0.
     Called when the client is done preparing the data received from Discord.
     Usually after login is successful and the Client.guilds and co. are filled up.
     """
@@ -26,7 +28,10 @@ async def on_ready() -> None:
 # TODO: Establish if can delete this one.
 @bot.event
 async def on_message(message: discord.message.Message) -> None:
-    """Called when a Message is created and sent."""
+    """
+    // TODO: Update this docstring after migrating to Discord.py 2.0.
+    Called when a Message is created and sent.
+    """
     await bot.process_commands(message)
 
 
