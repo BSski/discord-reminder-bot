@@ -5,7 +5,7 @@ from dateutil.relativedelta import relativedelta
 from discord.ext.commands import Context
 
 import reminders.const as const
-from texts import Error
+from reminders.texts import Error
 from reminders.user_profile import update_or_create_user_profile
 from reminders.utils import (
     convert_to_milliseconds,
