@@ -28,7 +28,7 @@ COMMANDS_ALIASES = {
         "reminder_help",
         "help_reminder",
         "help_remindesr",
-        "list_remidners",
+        "help_remidners",
         "help-reminders",
         "help_r",
         "r_help",
