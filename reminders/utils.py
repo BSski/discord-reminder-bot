@@ -9,15 +9,6 @@ import reminders.const as const
 from reminders.texts import Error
 
 
-def get_commands_prefix(client: bot.Bot, message: discord.message.Message) -> list:
-    """
-    Sets prefixes used to invoke bot's commands and enables users to invoke commands
-    by tagging the bot.
-    """
-    prefixes = ["!", "$"]
-    return commands.when_mentioned_or(*prefixes)(client, message)
-
-
 def utc_to_local(utc_date: dt.datetime) -> dt.datetime:
     """
     Converts datetime object with UTC timezone set to LOCAL_TIMEZONE

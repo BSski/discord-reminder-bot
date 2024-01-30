@@ -55,7 +55,7 @@ async def display_help(ctx: Context) -> None:
     await ctx.send(embed=embed)
 
 
-def setup(bot):
+async def setup(bot):
     bot.add_command(shutdown)
     bot.add_command(say_datetime)
-    bot.add_command(display_help)
+    # bot.add_command(display_help)  # FIXME: fix this.

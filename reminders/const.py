@@ -31,6 +31,7 @@ COMMANDS_ALIASES = {
         "list_remidners",
         "help-reminders",
         "help_r",
+        "r_help",
     ),
     "create_reminder": (
         "remind",
@@ -56,15 +57,18 @@ COMMANDS_ALIASES = {
         "list_reminder",
         "reminder_list",
         "list-reminders",
+        "r_list",
     ),
     "my_reminders": (
         "reminders_my",
         "my_remindesr",
         "my-reminders",
+        "my_r",
     ),
     "show_reminder": (
         "reminder_show",
         "show-reminder",
+        "show_r",
     ),
     "delete_reminder": (
         "reminder_delete",
@@ -73,5 +77,6 @@ COMMANDS_ALIASES = {
         "delete-reminder",
         "del_reminder",
         "d_reminder",
+        "d_r",
     ),
 }

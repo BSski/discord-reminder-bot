@@ -299,7 +299,7 @@ async def check_reminders(bot: bot.Bot) -> None:
         await asyncio.sleep(const.TIME_BETWEEN_REMINDER_CHECKS)
 
 
-def setup(bot):
+async def setup(bot):
     bot.add_command(help_reminders)
     bot.add_command(create_reminder)
     bot.add_command(list_reminders)
