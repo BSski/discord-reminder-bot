@@ -5,7 +5,7 @@ from discord.ext import commands
 
 import global_const
 from keep_alive import keep_alive
-from reminders.reminders_bot import check_reminders
+from reminders.core import check_reminders
 
 
 class MyHelp(commands.MinimalHelpCommand):
@@ -35,12 +35,17 @@ class Bot(commands.Bot):
         """on_ready can be run multiple times in some cases, we need to make sure
         the check_reminders task is only started once."""
         print("Bot is online.")
-        self.loop.create_task(check_reminders(self))  # TODO: make sure it's run only once.
+        self.loop.create_task(
+            check_reminders(self)
+        )  # FIXME: make sure it's run only once.
 
 
 async def main() -> None:
     async with Bot() as bot:
         await bot.start(global_const.TOKEN)
 
+
 keep_alive()
 asyncio.run(main())
+
+# FIXME: Fix Python warnings in the project.

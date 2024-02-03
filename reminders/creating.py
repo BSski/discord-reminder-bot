@@ -7,101 +7,12 @@ from discord.ext.commands import Context
 import reminders.const as const
 from reminders.texts import Error
 from reminders.user_profile import update_or_create_user_profile
-from reminders.utils import (
-    convert_to_milliseconds,
-    utc_to_local,
+from reminders.validate import (
+    validate_datetime,
+    validate_timedelta,
 )
 from utils.utils import display_notification
 
-
-def validate_user_profile(ctx: Context) -> str:
-    """
-    Checks if the user didn't surpass any reminder limit.
-    Returns empty string if the validation succeeded. Returns error message otherwise.
-    """
-    user_reminders_info = const.REMINDERBOT_USERS_PROFILES.find_one(
-        {"_id": ctx.author.id}
-    )
-
-    if not user_reminders_info:
-        return Error.CANT_GET_USER
-
-    user_all_reminders = user_reminders_info["user_all_reminders"]
-    err = check_if_cooldown(
-        user_all_reminders,
-        time_limit_object=dt.timedelta(minutes=20),
-        time_limit="20 minutes",  # FIXME: make it const and format string here with it
-        max_active_reminders=30,
-    )
-    if err:
-        return err
-
-    err = check_if_cooldown(
-        user_all_reminders,
-        time_limit_object=dt.timedelta(days=30),
-        time_limit="30 days",
-        max_active_reminders=1200,
-    )
-    if err:
-        return err
-
-    user_future_reminders = user_reminders_info["user_future_reminders"]
-    if len(user_future_reminders) > 999:
-        return Error.TOO_MANY_ACTIVE_REMINDERS
-    return ""
-
-
-def check_if_cooldown(
-    user_all_reminders: list,
-    time_limit_object: dt.datetime,
-    time_limit: str,
-    max_active_reminders: int,
-) -> str:
-    """
-    Checks if the user didn't surpass a reminder limit.
-    Returns empty string if the check succeeded. Returns error message otherwise.
-    """
-    if len(user_all_reminders) >= max_active_reminders:
-        x = const.PAST_REMINDERS.find_one(
-            {"_id": user_all_reminders[-max_active_reminders]}
-        )
-        if not x:
-            x = const.FUTURE_REMINDERS.find_one(
-                {"_id": user_all_reminders[-max_active_reminders]}
-            )
-        if not x:
-            return Error.TRY_AGAIN
-        if (
-            utc_to_local(x["date_created"])
-            > dt.datetime.now(const.LOCAL_TIMEZONE) - time_limit_object
-        ):
-            return Error.THROTTLE.format(max_active_reminders, time_limit)
-    return ""
-
-
-def validate_msg(msg: str | None) -> str:
-    """
-    Checks if the content of the command fits the requirements.
-    Returns empty string if the check succeeded. Returns error message otherwise.
-    """
-    if msg is None:
-        return Error.INVALID_FORMAT
-
-    if len(msg) > 900:
-        return Error.TOO_LONG_NAME
-
-    msg_parts = msg.split()
-
-    if len(msg_parts) < 5:
-        return Error.INVALID_FORMAT
-
-    msg_parts = tuple(map(lambda a: a.lower(), msg_parts))
-    if msg_parts[0] != "me" or msg_parts[1] != "of":
-        return Error.INVALID_FORMAT
-
-    if "on" not in msg_parts and "in" not in msg_parts:
-        return Error.INVALID_FORMAT
-    return ""
 
 
 def extract_info_from_msg(
@@ -202,69 +113,6 @@ def separate_name_and_date(
     return reminder_name_parts, reminder_date_parts
 
 
-def validate_datetime(reminder_date_parts: list[str]) -> str:
-    """
-    Checks if the datetime is correct.
-    Returns empty string if the validation succeeded. Returns error message otherwise.
-    """
-    reminder_date_str = " ".join(reminder_date_parts)
-    try:
-        reminder_date = dt.datetime.strptime(reminder_date_str, "%d.%m.%y %H:%M")
-    except ValueError:
-        return Error.WRONG_DATETIME_FORMAT
-
-    reminder_date = const.LOCAL_TIMEZONE.localize(reminder_date)
-    current_date = dt.datetime.now(const.LOCAL_TIMEZONE)
-
-    if reminder_date < current_date:
-        return Error.CANT_REMIND_IN_PAST
-    return ""
-
-
-def validate_timedelta(
-    reminder_date_parts: list[str], accepted_time_units: dict
-) -> str:
-    """
-    Checks if the timedelta information is correct.
-    Returns empty string if the validation succeeded. Returns error message otherwise.
-    """
-    if not reminder_date_parts:
-        return Error.WRONG_DATETIME_INFO
-
-    accepted_time_units_values_flat = {
-        item for sublist in accepted_time_units.values() for item in sublist
-    }
-
-    if all(
-        msg_word not in accepted_time_units_values_flat
-        for msg_word in reminder_date_parts
-    ):
-        return Error.WRONG_DATETIME_INFO
-
-    # FIXME: Make these "if any" a separate funcs.
-    if any(
-        (
-            not isinstance(elem, str) and elem not in accepted_time_units_values_flat
-            if idx % 2 == 1
-            else not elem.isdecimal()
-        )
-        for idx, elem in enumerate(reminder_date_parts)
-    ):
-        return Error.WRONG_DATETIME_INFO
-
-    if all(
-        int(elem) == 0 for idx, elem in enumerate(reminder_date_parts) if idx % 2 == 0
-    ):
-        return Error.CANT_BE_ONLY_ZEROS
-
-    if any(
-        int(elem) > 500000000
-        for idx, elem in enumerate(reminder_date_parts)
-        if idx % 2 == 0
-    ):
-        return Error.TOO_BIG_NUMBER
-    return ""
-
 
 def get_timezone_aware_datetime(reminder_date_parts: list[str]) -> dt.datetime:
     """Returns localized (timezone aware) future datetime of a reminder."""
@@ -311,7 +159,11 @@ def create_reminder_to_insert(
         f"{reminder_name[:50]} [...]" if len(reminder_name) > 50 else reminder_name
     )
     current_datetime = dt.datetime.now(const.LOCAL_TIMEZONE)
-    hash_id = const.hashids.encode(convert_to_milliseconds(current_datetime))
+
+    current_milliseconds_time = int(
+        current_datetime.timestamp() * 1000 + current_datetime.microsecond / 1000
+    )
+    hash_id = const.hashids.encode(current_milliseconds_time)
     return {
         "friendly_id": hash_id,
         "author_id": ctx.author.id,
@@ -336,9 +188,7 @@ def insert_reminder_to_database(author_id: int, data: dict) -> str:
     if not result.inserted_id:
         return Error.TRY_AGAIN
 
-    if err := update_or_create_user_profile(
-        author_id, result.inserted_id
-    ):
+    if err := update_or_create_user_profile(author_id, result.inserted_id):
         return Error.TRY_AGAIN
     return ""
 
