@@ -5,7 +5,7 @@ from discord.ext.commands import bot
 
 import reminders.const as const
 from reminders.texts import Error
-from reminders.utils import utc_to_local
+from utils.utils import utc_to_local
 
 
 async def remind_user(bot: bot.Bot, user_id: bson.int64.Int64, reminder: dict) -> None:

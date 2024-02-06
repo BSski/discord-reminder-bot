@@ -4,7 +4,7 @@ from discord.ext.commands import Context
 
 import reminders.const as const
 from reminders.texts import Error
-from reminders.utils import utc_to_local
+from utils.utils import utc_to_local
 
 
 def validate_reminder_friendly_id(

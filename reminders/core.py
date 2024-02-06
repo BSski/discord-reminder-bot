@@ -24,7 +24,6 @@ from reminders.user_profile import (
     update_user_profile_when_canceling_reminder,
     update_user_profile_with_past_reminder,
 )
-from reminders.utils import utc_to_local
 from reminders.validate import (
     validate_msg,
     validate_reminder_friendly_id,
@@ -34,6 +33,7 @@ from utils.utils import (
     display_error,
     display_error_on_channel,
     display_notification,
+    utc_to_local,
 )
 
 
