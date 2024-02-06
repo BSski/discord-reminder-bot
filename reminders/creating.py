@@ -14,7 +14,6 @@ from reminders.validate import (
 from utils.utils import display_notification
 
 
-
 def extract_info_from_msg(
     msg_parts: list[str],
 ) -> tuple[str | None, dt.datetime | None, str]:
@@ -23,34 +22,15 @@ def extract_info_from_msg(
         datetime_reminder_separator_idx = msg_parts[::-1].index("on")
         timedelta_reminder_separator_idx = msg_parts[::-1].index("in")
         if datetime_reminder_separator_idx < timedelta_reminder_separator_idx:
-            (
-                reminder_name,
-                reminder_date,
-                err,
-            ) = extract_msg_info_datetime(msg_parts)
+            reminder_name, reminder_date, err = extract_msg_info_datetime(msg_parts)
         else:
-            (
-                reminder_name,
-                reminder_date,
-                err,
-            ) = extract_msg_info_timedelta(msg_parts)
-
+            reminder_name, reminder_date, err = extract_msg_info_timedelta(msg_parts)
     elif "on" in msg_parts:
-        (
-            reminder_name,
-            reminder_date,
-            err,
-        ) = extract_msg_info_datetime(msg_parts)
-
+        reminder_name, reminder_date, err = extract_msg_info_datetime(msg_parts)
     elif "in" in msg_parts:
-        (
-            reminder_name,
-            reminder_date,
-            err,
-        ) = extract_msg_info_timedelta(msg_parts)
+        reminder_name, reminder_date, err = extract_msg_info_timedelta(msg_parts)
     else:
         err = Error.NO_ON_IN_IN_MSG
-
     return (None, None, err) if err else (reminder_name, reminder_date, "")
 
 
@@ -111,7 +91,6 @@ def separate_name_and_date(
     reminder_name_parts = msg_parts[2 : -separator_word_idx - 1]
     reminder_date_parts = msg_parts[-separator_word_idx:]
     return reminder_name_parts, reminder_date_parts
-
 
 
 def get_timezone_aware_datetime(reminder_date_parts: list[str]) -> dt.datetime:
