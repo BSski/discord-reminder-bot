@@ -28,7 +28,7 @@ class Bot(commands.Bot):
         self.help_command = MyHelp()
 
     async def setup_hook(self) -> None:
-        await self.load_extension("reminders.reminders_bot")
+        await self.load_extension("reminders.core")
         await self.load_extension("base.base")
 
     async def on_ready(self) -> None:
