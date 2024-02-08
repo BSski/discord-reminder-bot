@@ -240,18 +240,13 @@ async def delete_reminder(ctx: Context, *, reminder_friendly_id: str = None) -> 
     rmndr_to_delete = const.FUTURE_REMINDERS.find_one(
         {"friendly_id": reminder_friendly_id, "author_id": ctx.author.id}
     )
-
     if not rmndr_to_delete:
         await display_error(ctx, Error.NO_REMINDER_ID_DELETE)
         return
 
     if err := update_user_after_canceling(ctx.author.id, rmndr_to_delete["_id"]):
         await display_error(ctx, Error.TRY_AGAIN)
-        return
-
-    print("Pre-remind_user")
-    await remind_user(bot, rmndr_to_delete, ":x: {} Deleted reminder")
-    print("Post-remind_user")
+        returnq
 
     result = const.FUTURE_REMINDERS.delete_one(
         {"friendly_id": reminder_friendly_id, "author_id": ctx.author.id}
@@ -259,7 +254,11 @@ async def delete_reminder(ctx: Context, *, reminder_friendly_id: str = None) -> 
     if result.deleted_count == 0:
         await display_error(ctx, Error.TRY_AGAIN)
         return
-    print("Post-delete")
+    print("Post-delete")  # TODO: Remove.
+
+    print("Pre-remind_user")  # TODO: Remove.
+    await remind_user(bot, rmndr_to_delete, ":x: {} Deleted reminder")
+    print("Post-remind_user")  # TODO: Remove.
 
 
 async def check_reminders(bot: bot.Bot) -> None:
