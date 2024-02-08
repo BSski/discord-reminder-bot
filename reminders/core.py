@@ -264,7 +264,8 @@ async def delete_reminder(ctx: Context, *, reminder_friendly_id: str = None) -> 
         color=0xFFA500,
     )
     channel = bot.get_channel(int(const.CHANNEL_ID))
-    await channel.send(embed=embed)
+    author_tagging_msg = f'<@{rmndr_to_delete["author_id"]}>'
+    await channel.send(author_tagging_msg, embed=embed)
 
     result = const.FUTURE_REMINDERS.delete_one(
         {"friendly_id": reminder_friendly_id, "author_id": ctx.author.id}
