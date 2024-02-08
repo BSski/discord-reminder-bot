@@ -261,7 +261,7 @@ async def delete_reminder(ctx: Context, *, reminder_friendly_id: str = None) -> 
         utc_to_local(rmndr_to_delete["date_created"]).strftime("%d.%m.%Y %H:%M:%S"),
     )
     embed = discord.Embed(
-        title=":x: {} Deleted reminder".format(
+        title=":x: Deleted reminder set to {}".format(
             utc_to_local(rmndr_to_delete["reminder_date"]).strftime("%d.%m.%Y %H:%M:%S"),
         ),
         description=reminder_description,
