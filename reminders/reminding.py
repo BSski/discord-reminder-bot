@@ -27,7 +27,7 @@ async def remind_user(bot: bot.Bot, user_id: bson.int64.Int64, reminder: dict) -
     await channel.send(author_tagging_msg, embed=embed)
 
 
-async def add_to_past_reminders(reminder: dict) -> str:
+async def archive_reminder(reminder: dict) -> str:
     """Adds reminded reminders to PAST_REMINDERS collection."""
     reminder = reminder.copy()
     reminder["done"] = True

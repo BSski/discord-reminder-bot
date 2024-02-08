@@ -35,8 +35,7 @@ def validate_user_profile(ctx: Context) -> str:
     user_all_reminders = user_reminders_info["user_all_reminders"]
     err = check_if_cooldown(
         user_all_reminders,
-        time_limit_object=dt.timedelta(minutes=20),
-        time_limit="20 minutes",  # FIXME: make it const and format string here with it
+        time_limit=dt.timedelta(minutes=20),  # TODO: Make it a const.
         max_active_reminders=30,
     )
     if err:
@@ -44,8 +43,7 @@ def validate_user_profile(ctx: Context) -> str:
 
     err = check_if_cooldown(
         user_all_reminders,
-        time_limit_object=dt.timedelta(days=30),
-        time_limit="30 days",
+        time_limit=dt.timedelta(days=30),  # TODO: Make it a const.
         max_active_reminders=1200,
     )
     if err:
@@ -69,9 +67,9 @@ def validate_msg(msg: str | None) -> str:
         return Error.TOO_LONG_NAME
 
     msg_parts = msg.lower().split()
-
     if ("on" not in msg_parts) and ("in" not in msg_parts):
         return Error.INVALID_FORMAT
+
     return ""
 
 
@@ -91,6 +89,7 @@ def validate_datetime(reminder_date_parts: list[str]) -> str:
 
     if reminder_date < current_date:
         return Error.CANT_REMIND_IN_PAST
+
     return ""
 
 
@@ -114,7 +113,7 @@ def validate_timedelta(
     ):
         return Error.WRONG_DATETIME_INFO
 
-    # FIXME: Make these "if any" a separate funcs.
+    # FIXME: Make these "if any" separate funcs.
     if any(
         (
             not isinstance(elem, str) and elem not in accepted_time_units_values_flat
@@ -136,32 +135,34 @@ def validate_timedelta(
         if idx % 2 == 0
     ):
         return Error.TOO_BIG_NUMBER
+
     return ""
 
 
 def check_if_cooldown(
     user_all_reminders: list,
-    time_limit_object: dt.datetime,
-    time_limit: str,
+    time_limit: dt.timedelta,
     max_active_reminders: int,
 ) -> str:
     """
     Checks if the user didn't surpass a reminder limit.
     Returns empty string if the check succeeded. Returns error message otherwise.
     """
-    if len(user_all_reminders) >= max_active_reminders:
-        x = const.PAST_REMINDERS.find_one(
+    if len(user_all_reminders) < max_active_reminders:
+        return ""
+
+    r = const.PAST_REMINDERS.find_one(
+        {"_id": user_all_reminders[-max_active_reminders]}
+    )
+    if not r:
+        r = const.FUTURE_REMINDERS.find_one(
             {"_id": user_all_reminders[-max_active_reminders]}
         )
-        if not x:
-            x = const.FUTURE_REMINDERS.find_one(
-                {"_id": user_all_reminders[-max_active_reminders]}
-            )
-        if not x:
-            return Error.TRY_AGAIN
-        if (
-            utc_to_local(x["date_created"])
-            > dt.datetime.now(const.LOCAL_TIMEZONE) - time_limit_object
-        ):
-            return Error.THROTTLE.format(max_active_reminders, time_limit)
+    if not r:
+        return Error.TRY_AGAIN
+
+    max_allowed_past_datetime = dt.datetime.now(const.LOCAL_TIMEZONE) - time_limit
+    if utc_to_local(r["date_created"]) > max_allowed_past_datetime:
+        return Error.THROTTLE.format(max_active_reminders, time_limit)
+
     return ""

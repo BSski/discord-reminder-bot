@@ -4,7 +4,7 @@ import reminders.const as const
 from reminders.texts import Error
 
 
-def update_or_create_user_profile(
+def upsert_user_profile(
     author_id: int, inserted_reminder_id: bson.objectid.ObjectId
 ) -> str:
     """
@@ -39,7 +39,7 @@ def update_or_create_user_profile(
     return ""
 
 
-def update_user_profile_with_past_reminder(
+def update_user_after_reminding(
     author_id: bson.int64.Int64, reminder_id: bson.objectid.ObjectId
 ) -> str:
     """
@@ -63,7 +63,7 @@ def update_user_profile_with_past_reminder(
     return "" if result.modified_count else Error.CANT_REMOVE
 
 
-def update_user_profile_when_canceling_reminder(
+def update_user_after_canceling(
     author_id: int, reminder_to_delete_id: bson.objectid.ObjectId
 ) -> str:
     """

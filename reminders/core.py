@@ -15,14 +15,14 @@ from reminders.creating import (
     insert_reminder_to_database,
 )
 from reminders.reminding import (
-    add_to_past_reminders,
+    archive_reminder,
     delete_done_reminders,
     remind_user,
 )
 from reminders.texts import Help, Error, Info
 from reminders.user_profile import (
-    update_user_profile_when_canceling_reminder,
-    update_user_profile_with_past_reminder,
+    update_user_after_canceling,
+    update_user_after_reminding,
 )
 from reminders.validate import (
     validate_msg,
@@ -237,16 +237,16 @@ async def delete_reminder(ctx: Context, *, reminder_friendly_id: str = None) -> 
         await display_error(ctx, err)
         return
 
-    reminder_to_delete = const.FUTURE_REMINDERS.find_one(
+    rmndr_to_delete = const.FUTURE_REMINDERS.find_one(
         {"friendly_id": reminder_friendly_id, "author_id": ctx.author.id}
     )
 
-    if not reminder_to_delete:
+    if not rmndr_to_delete:
         await display_error(ctx, Error.NO_REMINDER_ID_DELETE)
         return
 
-    if err := update_user_profile_when_canceling_reminder(
-        ctx.author.id, reminder_to_delete["_id"]
+    if err := update_user_after_canceling(
+        ctx.author.id, rmndr_to_delete["_id"]
     ):
         await display_error(ctx, Error.TRY_AGAIN)
         return
@@ -258,7 +258,20 @@ async def delete_reminder(ctx: Context, *, reminder_friendly_id: str = None) -> 
         await display_error(ctx, Error.TRY_AGAIN)
         return
 
-    await display_notification(ctx, Info.REMINDER_DELETED)
+    rmndr_description = "```{}```\n`{}`  created on  `{}`".format(
+        rmndr_to_delete["reminder_name_full"] or "- ",
+        rmndr_to_delete["friendly_id"],
+        utc_to_local(rmndr_to_delete["date_created"]).strftime("%d.%m.%Y %H:%M:%S"),
+    )
+    embed = discord.Embed(
+        title=":x: {} Deleted reminder:".format(
+            utc_to_local(rmndr_to_delete["reminder_date"]).strftime("%d.%m.%Y %H:%M:%S"),
+        ),
+        description=rmndr_description,
+        color=0xFFA500,
+    )
+    channel = bot.get_channel(int(const.CHANNEL_ID))
+    await channel.send(embed=embed)
 
 
 async def check_reminders(bot: bot.Bot) -> None:
@@ -274,11 +287,11 @@ async def check_reminders(bot: bot.Bot) -> None:
                 continue
             await remind_user(bot, reminder["author_id"], reminder)
 
-            if err := await add_to_past_reminders(reminder):
+            if err := await archive_reminder(reminder):
                 await display_error_on_channel(channel, err)
                 continue
 
-            if err := update_user_profile_with_past_reminder(
+            if err := update_user_after_reminding(
                 reminder["author_id"], reminder["_id"]
             ):
                 await display_error_on_channel(channel, err)
@@ -286,9 +299,8 @@ async def check_reminders(bot: bot.Bot) -> None:
 
             reminders_to_delete.append(reminder["_id"])
 
-        # FIXME: Why just not shut the program down here?
         if err := await delete_done_reminders(reminders_to_delete):
-            print("\n\n\nCRITICAL: delete_done_reminders() \n\n\n")
+            print("\nCRITICAL: delete_done_reminders()\n")
             await display_error_on_channel(channel, err)
             continue
         await asyncio.sleep(const.TIME_BETWEEN_REMINDER_CHECKS)

@@ -52,4 +52,3 @@ class Info:
     )
     EMPTY_MY_PROFILE_NOTIFICATION = "You haven't made any reminders ever. Try making one!\nCommand format: !remind me of X in/on Y"
     NO_REMINDERS_NOTIFICATION = "You haven't made any reminders."
-    REMINDER_DELETED = "Reminder deleted!"

@@ -6,7 +6,7 @@ from discord.ext.commands import Context
 
 import reminders.const as const
 from reminders.texts import Error
-from reminders.user_profile import update_or_create_user_profile
+from reminders.user_profile import upsert_user_profile
 from reminders.validate import (
     validate_datetime,
     validate_timedelta,
@@ -167,7 +167,7 @@ def insert_reminder_to_database(author_id: int, data: dict) -> str:
     if not result.inserted_id:
         return Error.TRY_AGAIN
 
-    if err := update_or_create_user_profile(author_id, result.inserted_id):
+    if err := upsert_user_profile(author_id, result.inserted_id):
         return Error.TRY_AGAIN
     return ""
 
