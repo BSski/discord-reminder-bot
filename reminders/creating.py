@@ -88,7 +88,7 @@ def separate_name_and_date(
 ) -> tuple[list[str], list[str]]:
     """Divides the command's message into reminder name parts and reminder date parts."""
     separator_word_idx = msg_parts[::-1].index(separator_word)
-    reminder_name_parts = msg_parts[2 : -separator_word_idx - 1]
+    reminder_name_parts = msg_parts[: -separator_word_idx - 1]
     reminder_date_parts = msg_parts[-separator_word_idx:]
     return reminder_name_parts, reminder_date_parts
 

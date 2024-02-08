@@ -68,18 +68,9 @@ def validate_msg(msg: str | None) -> str:
     if len(msg) > 1000:
         return Error.TOO_LONG_NAME
 
-    msg_parts = msg.split()
+    msg_parts = msg.lower().split()
 
-    # SOFT DELETED
-    # if len(msg_parts) < 5:
-    #     return Error.INVALID_FORMAT
-
-    msg_parts = tuple(map(lambda a: a.lower(), msg_parts))
-    # SOFT DELETED
-    # if msg_parts[0] != "me" or msg_parts[1] != "of":
-    #     return Error.INVALID_FORMAT
-
-    if "on" not in msg_parts and "in" not in msg_parts:
+    if ("on" not in msg_parts) and ("in" not in msg_parts):
         return Error.INVALID_FORMAT
     return ""
 
