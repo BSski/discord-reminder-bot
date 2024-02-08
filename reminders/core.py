@@ -245,16 +245,7 @@ async def delete_reminder(ctx: Context, *, reminder_friendly_id: str = None) -> 
         await display_error(ctx, Error.NO_REMINDER_ID_DELETE)
         return
 
-    if err := update_user_after_canceling(
-        ctx.author.id, rmndr_to_delete["_id"]
-    ):
-        await display_error(ctx, Error.TRY_AGAIN)
-        return
-
-    result = const.FUTURE_REMINDERS.delete_one(
-        {"friendly_id": reminder_friendly_id, "author_id": ctx.author.id}
-    )
-    if result.deleted_count == 0:
+    if err := update_user_after_canceling(ctx.author.id, rmndr_to_delete["_id"]):
         await display_error(ctx, Error.TRY_AGAIN)
         return
 
@@ -265,13 +256,22 @@ async def delete_reminder(ctx: Context, *, reminder_friendly_id: str = None) -> 
     )
     embed = discord.Embed(
         title=":x: {} Deleted reminder:".format(
-            utc_to_local(rmndr_to_delete["reminder_date"]).strftime("%d.%m.%Y %H:%M:%S"),
+            utc_to_local(rmndr_to_delete["reminder_date"]).strftime(
+                "%d.%m.%Y %H:%M:%S"
+            ),
         ),
         description=rmndr_description,
         color=0xFFA500,
     )
     channel = bot.get_channel(int(const.CHANNEL_ID))
     await channel.send(embed=embed)
+
+    result = const.FUTURE_REMINDERS.delete_one(
+        {"friendly_id": reminder_friendly_id, "author_id": ctx.author.id}
+    )
+    if result.deleted_count == 0:
+        await display_error(ctx, Error.TRY_AGAIN)
+        return
 
 
 async def check_reminders(bot: bot.Bot) -> None:
