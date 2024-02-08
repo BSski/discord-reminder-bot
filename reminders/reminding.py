@@ -8,7 +8,7 @@ from reminders.texts import Error
 from utils.utils import utc_to_local
 
 
-async def remind_user(bot: bot.Bot, user_id: bson.int64.Int64, reminder: dict) -> None:
+async def remind_user(bot: bot.Bot, reminder: dict, msg: str) -> None:
     """Sends a reminder on CHANNEL_ID channel."""
     reminder_description = "```{}```\n`{}`  created on  `{}`".format(
         reminder["reminder_name_full"] or "- ",
@@ -16,14 +16,14 @@ async def remind_user(bot: bot.Bot, user_id: bson.int64.Int64, reminder: dict) -
         utc_to_local(reminder["date_created"]).strftime("%d.%m.%Y %H:%M:%S"),
     )
     embed = discord.Embed(
-        title=":exclamation: {}".format(
+        title=msg.format(
             utc_to_local(reminder["reminder_date"]).strftime("%d.%m.%Y %H:%M:%S"),
         ),
         description=reminder_description,
         color=0xFFA500,
     )
     channel = bot.get_channel(int(const.CHANNEL_ID))
-    author_tagging_msg = f"<@{user_id}>"
+    author_tagging_msg = f"<@{reminder['author_id']}>"
     await channel.send(author_tagging_msg, embed=embed)
 
 

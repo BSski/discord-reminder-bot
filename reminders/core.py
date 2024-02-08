@@ -249,23 +249,7 @@ async def delete_reminder(ctx: Context, *, reminder_friendly_id: str = None) -> 
         await display_error(ctx, Error.TRY_AGAIN)
         return
 
-    rmndr_description = "```{}```\n`{}`  created on  `{}`".format(
-        rmndr_to_delete["reminder_name_full"] or "- ",
-        rmndr_to_delete["friendly_id"],
-        utc_to_local(rmndr_to_delete["date_created"]).strftime("%d.%m.%Y %H:%M:%S"),
-    )
-    embed = discord.Embed(
-        title=":x: {} Deleted reminder:".format(
-            utc_to_local(rmndr_to_delete["reminder_date"]).strftime(
-                "%d.%m.%Y %H:%M:%S"
-            ),
-        ),
-        description=rmndr_description,
-        color=0xFFA500,
-    )
-    channel = bot.get_channel(int(const.CHANNEL_ID))
-    author_tagging_msg = f'<@{rmndr_to_delete["author_id"]}>'
-    await channel.send(author_tagging_msg, embed=embed)
+    await remind_user(bot, rmndr_to_delete, ":x: {} Deleted reminder")
 
     result = const.FUTURE_REMINDERS.delete_one(
         {"friendly_id": reminder_friendly_id, "author_id": ctx.author.id}
@@ -286,7 +270,7 @@ async def check_reminders(bot: bot.Bot) -> None:
             reminder_datetime = utc_to_local(reminder["reminder_date"])
             if reminder_datetime > current_datetime:
                 continue
-            await remind_user(bot, reminder["author_id"], reminder)
+            await remind_user(bot, reminder, ":exclamation: {}")
 
             if err := await archive_reminder(reminder):
                 await display_error_on_channel(channel, err)
